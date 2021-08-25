@@ -21,7 +21,6 @@ class loginActivity : AppCompatActivity() {
     lateinit var alertDialog: AlertDialog.Builder
     lateinit var dialog: AlertDialog
     val array = arrayListOf(
-        "",
         "社區1",
         "社區2",
         "社區3",
@@ -64,6 +63,7 @@ class loginActivity : AppCompatActivity() {
         adapter.notifyDataSetChanged()
         alertDialog.setView(rowList)
         dialog = alertDialog.create()
+//        dialog.setTitle("便當")
         dialog.show()
     }
 
