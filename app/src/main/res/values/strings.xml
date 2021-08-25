@@ -61,5 +61,7 @@
 ‧ 本App隱私權保護政策將因應需求隨時進行修正，修正後的條款將更新於本App。 "\n "
 "\n "
 如果我們隱私權條款有任何不清楚的地方或疑問，請聯繫我們 : service@ductech.tw</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -7,37 +7,44 @@ import android.provider.AlarmClock
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
+import android.widget.ListView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
 class loginActivity : AppCompatActivity() {
     private val TAG = "loginActivity"
+
+    lateinit var adapter: ArrayAdapter<String>
+    lateinit var listView: ListView
+    lateinit var alertDialog: AlertDialog.Builder
+    lateinit var dialog: AlertDialog
+    val array = arrayListOf(
+        "",
+        "社區1",
+        "社區2",
+        "社區3",
+        "社區4",
+        "社區5",
+        "社區6",
+        "社區7",
+        "社區8",
+        "社區9",
+        "社區10",
+        "社區11",
+        "社區12",
+        "社區13",
+        "社區14",
+        "社區15"
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         this.supportActionBar?.hide() //隱藏title
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        val array = arrayListOf(
-            "",
-            "社區1",
-            "社區2",
-            "社區3",
-            "社區4",
-            "社區5",
-            "社區6",
-            "社區7",
-            "社區8",
-            "社區9",
-            "社區10",
-            "社區11",
-            "社區12",
-            "社區13",
-            "社區14",
-            "社區15"
-        )
-        val adapter = ArrayAdapter(this, android.R.layout.select_dialog_item, array)
-        spinner.adapter = adapter
+
 
 //        val returnBtn = findViewById<View>(R.id.returnBtn) as ImageButton
 //        returnBtn.setOnClickListener {
@@ -47,6 +54,23 @@ class loginActivity : AppCompatActivity() {
 //            startActivity(intent1)
 //        }
     }
+
+    fun openDialog(view: View) {
+        alertDialog = AlertDialog.Builder(this)
+        val rowList: View = layoutInflater.inflate(R.layout.my_dialog, null)
+        listView = rowList.findViewById(R.id.listView)
+        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, array)
+        listView.adapter = adapter
+        adapter.notifyDataSetChanged()
+        alertDialog.setView(rowList)
+        dialog = alertDialog.create()
+        dialog.show()
+    }
+
+    fun closeDialog(view: View) {
+        dialog.dismiss()
+    }
+
     fun forgot(view: View){
         setContentView(R.layout.forgotresidentcode)
     }

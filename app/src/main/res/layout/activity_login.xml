@@ -80,18 +80,30 @@
             android:gravity="left|center_vertical"
             android:paddingLeft="16dp"/>
 
-        <Spinner
+<!--        <Spinner-->
+<!--            android:id="@+id/spinner"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="60dp"-->
+<!--            android:layout_below="@id/logintext"-->
+<!--            android:prompt="@string/Choosecommunity1"-->
+<!--            android:spinnerMode="dialog"-->
+<!--            android:background="@drawable/shape_text"-->
+<!--            android:layout_marginLeft="15dp"-->
+<!--            android:layout_marginRight="15dp"-->
+<!--            android:layout_marginTop="30dp"-->
+<!--            android:stateListAnimator="@null" />-->
+
+        <Button
+            android:onClick="openDialog"
             android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_below="@id/logintext"
-            android:prompt="@string/Choosecommunity1"
-            android:spinnerMode="dialog"
+            android:layout_below="@+id/logintext"
             android:background="@drawable/shape_text"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:layout_marginTop="30dp"
-            android:stateListAnimator="@null" />
+            android:layout_marginRight="15dp"
+            />
 
         <EditText
             android:id="@+id/landingedit"
