@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/icon_android_cms_nav_buttom_home_on"
+        android:title="@string/homeid"
+        app:itemTextColor="@color/loading"
+        app:itemIconTint="@color/loading" />
+
+    <item
+        android:id="@+id/navigation_scan"
+        android:icon="@drawable/icon_android_cms_nav_buttom_scan_off"
+        android:title="@string/scan_off"
+        app:itemTextColor="@color/loading"
+        app:itemIconTint="@color/loading" />
+
+    <item
+        android:id="@+id/navigation_setting"
+        android:icon="@drawable/icon_android_cms_nav_buttom_setting_off"
+        android:title="@string/setting_off"
+        app:itemTextColor="@color/loading"
+        app:itemIconTint="@color/loading" />
+
+</menu>
