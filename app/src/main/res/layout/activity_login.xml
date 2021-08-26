@@ -157,29 +157,27 @@
 
         <TextView
             android:id="@+id/textview4"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/privacy"
             android:textSize="14dp"
             android:textColor="@color/Choosecommunity"
             android:layout_alignParentBottom="true"
-            android:gravity="left|center_vertical"
-            android:layout_marginLeft="70dp"
+            android:layout_marginLeft="75dp"
             android:layout_marginBottom="40dp"
             android:layout_marginTop="10dp"/>
 
         <TextView
             android:onClick="privacypolicy"
             android:id="@+id/textview5"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/Policy"
             android:textSize="14dp"
             android:textColor="@color/loading"
             android:layout_alignParentBottom="true"
-            android:gravity="right|center_vertical"
-            android:layout_marginRight="55dp"
             android:layout_marginBottom="40dp"
+            android:layout_toEndOf="@+id/textview4"
             android:layout_marginTop="10dp"/>
 
 
