@@ -33,23 +33,8 @@ class loginActivity : AppCompatActivity() {
     lateinit var listView: ListView
     lateinit var alertDialog: AlertDialog.Builder
     lateinit var dialog: AlertDialog
-    val array = arrayListOf(
-        "社區1",
-        "社區2",
-        "社區3",
-        "社區4",
-        "社區5",
-        "社區6",
-        "社區7",
-        "社區8",
-        "社區9",
-        "社區10",
-        "社區11",
-        "社區12",
-        "社區13",
-        "社區14",
-        "社區15"
-    )
+    val array = arrayListOf("社區1", "社區2", "社區3", "社區4", "社區5", "社區6", "社區7", "社區8", "社區9", "社區10",
+        "社區11", "社區12", "社區13", "社區14", "社區15" )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         this.supportActionBar?.hide() //隱藏title
