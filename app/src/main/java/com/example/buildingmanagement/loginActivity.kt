@@ -1,17 +1,30 @@
 package com.example.buildingmanagement
 
-import android.content.Intent
+import android.annotation.SuppressLint
+import android.content.DialogInterface
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
-import android.provider.AlarmClock
+import android.util.DisplayMetrics
 import android.view.View
+import android.view.Window
 import android.widget.ArrayAdapter
-import android.widget.ImageButton
 import android.widget.ListView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.home.*
+
+
+val displayMetrics = DisplayMetrics()
+
+val heightPixels = displayMetrics.heightPixels //手機高度
+val widthPixels = displayMetrics.widthPixels
+
+val height = displayMetrics.heightPixels / displayMetrics.density //手機真實高度
+val weight = displayMetrics.widthPixels / displayMetrics.density //手機真實寬度
+
+//val window: Window = dialog.getWindow()
 
 class loginActivity : AppCompatActivity() {
     private val TAG = "loginActivity"
@@ -54,17 +67,27 @@ class loginActivity : AppCompatActivity() {
 //        }
     }
 
+
+    @SuppressLint("ResourceAsColor")
     fun openDialog(view: View) {
         alertDialog = AlertDialog.Builder(this)
         val rowList: View = layoutInflater.inflate(R.layout.my_dialog, null)
         listView = rowList.findViewById(R.id.listView)
         adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, array)
         listView.adapter = adapter
+        alertDialog.setPositiveButton("確定") { dialog, which -> }
+        alertDialog.setNegativeButton("取消") { dialog: DialogInterface?, which: Int ->  }
         adapter.notifyDataSetChanged()
         alertDialog.setView(rowList)
         dialog = alertDialog.create()
-//        dialog.setTitle("便當")
+        dialog.setTitle(R.string.Choosecommunity1)
+//        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(R.color.Choosecommunity)     //確定
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(14F)
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(R.color.Choosecommunity)     //取消
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(14F)
+//        dialog.getWindow()?.setLayout(heightPixels as Int, ViewGroup.LayoutParams.MATCH_PARENT)
     }
 
     fun closeDialog(view: View) {
@@ -79,14 +102,16 @@ class loginActivity : AppCompatActivity() {
         setContentView(R.layout.privacypolicy)
         val handler = Handler()
         handler.postDelayed({setContentView(R.layout.privacypolicy1)}, 1000)
-
     }
 
     fun landingbutton3(view: View) {
         setContentView(R.layout.home)
     }
-
 }
+
+
+
+
 
 
 

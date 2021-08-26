@@ -23,7 +23,10 @@
     <string name="setting_off">設定</string>
     <string name="hometitle">築睿社區</string>
     <string name="community_service">社區服務</string>
-    <string name="hometext">為完成包裹領取，社區管理中心可能會依據包裹姓名與您核對身份是否符合。</string>
+    <string name="hometext">為完成包裹領取，社區管理中心可能會依據包裹姓名與您核</string>
+    <string name="hometext1">對身份是否符合。</string>
+    <string name="homeinfobtn">儲存</string>
+    <string name="homeinfobtn1">略過</string>
     <string name="Policytext">歡迎您使用 DUC iNSPIRE X 社區管理 App（以下簡稱本App），為了讓您能夠安心的使用本App的各項服務與資訊，特此向您說明本App的隱私權保護政策，以保障您的權益，請您詳閱下列內容：  "\n "
         "\n "
 一、隱私權保護政策的適用範圍 "\n "
