@@ -1,20 +1,18 @@
 package com.example.buildingmanagement
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.DialogInterface
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
 import android.view.View
-import android.view.Window
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.home.*
-
 
 val displayMetrics = DisplayMetrics()
 
@@ -41,15 +39,15 @@ class loginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+//        val listViewClickListener = ListViewClickListener()
+//        listViewClickListener.onItemClick()
 
+        listView.setOnItemClickListener { parent, view, position, id ->
+            val element = adapter.getItemAtPosition(position) // The item that was clicked
+            val intent = Intent(this, loginActivity::class.java)
+            startActivity(intent)
+        }
 
-//        val returnBtn = findViewById<View>(R.id.returnBtn) as ImageButton
-//        returnBtn.setOnClickListener {
-//            val intent1 = Intent(this, MainActivity::class.java).apply {
-//                putExtra(AlarmClock.EXTRA_MESSAGE, intent)
-//            }
-//            startActivity(intent1)
-//        }
     }
 
 
@@ -92,6 +90,10 @@ class loginActivity : AppCompatActivity() {
     fun landingbutton3(view: View) {
         setContentView(R.layout.home)
     }
+}
+
+private fun <T> ArrayAdapter<T>.getItemAtPosition(position: Int): Any {
+    TODO("Not yet implemented")
 }
 
 
