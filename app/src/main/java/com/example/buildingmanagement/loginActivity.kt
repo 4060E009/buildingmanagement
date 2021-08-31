@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -42,11 +43,13 @@ class loginActivity : AppCompatActivity() {
 //        val listViewClickListener = ListViewClickListener()
 //        listViewClickListener.onItemClick()
 
-        listView.setOnItemClickListener { parent, view, position, id ->
-            val element = adapter.getItemAtPosition(position) // The item that was clicked
-            val intent = Intent(this, loginActivity::class.java)
-            startActivity(intent)
-        }
+//        listView.setOnItemClickListener { parent, view, position, id ->
+//            val element = adapter.getItemAtPosition(position) // The item that was clicked
+//            val intent = Intent(this, loginActivity::class.java)
+//            Log.d(TAG, "list view Listener " + element)
+//            Log.d(TAG, "list view Listener intert" + intent)
+//            startActivity(intent)
+//        }
 
     }
 
@@ -90,6 +93,14 @@ class loginActivity : AppCompatActivity() {
     fun landingbutton3(view: View) {
         setContentView(R.layout.home)
     }
+    fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+        if(listView!=null){
+            listView!!.setBackgroundColor(listView!!.getResources().getColor(R.color.loading))
+        }
+        p1?.setBackgroundColor(p1.getResources().getColor(R.color.loading))
+        listView= p1 as ListView
+    }
+
 }
 
 private fun <T> ArrayAdapter<T>.getItemAtPosition(position: Int): Any {

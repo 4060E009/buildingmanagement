@@ -9,9 +9,16 @@ import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
+
+    companion object {
+        val homeFragment = homeFragment()
+        val scanFragment = scanFragment()
+        val settingFragment = settingFragment()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +26,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.login_loading)
         val handler = Handler()
         handler.postDelayed({setContentView(R.layout.login_landing)}, 3000)
+
+        supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment).commit()
+        navigation_view.selectedItemId = R.id.navigation_home
+        navigation_view.setOnNavigationItemSelectedListener(listener)
 
     }
 
@@ -37,15 +48,15 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_home -> {
                     val manager = supportFragmentManager
                     val transaction = manager.beginTransaction()
-//                    transaction.replace(R.id.container_activity_main, homeFragment).commit()
+                    transaction.replace(R.id.container, homeFragment).commit()
                 }
                 R.id.navigation_scan -> {
                     val t = supportFragmentManager.beginTransaction()
-//                    t.replace(R.id.container_activity_main, reservationFragment).commit()
+                    t.replace(R.id.container, scanFragment).commit()
                 }
                 R.id.navigation_setting -> {
                     val t = supportFragmentManager.beginTransaction()
-//                    t.replace(R.id.container_activity_main, memberFragemnt).commit()
+                    t.replace(R.id.container, settingFragment).commit()
                 }
             }
             return true
