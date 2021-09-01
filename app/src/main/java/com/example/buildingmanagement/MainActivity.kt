@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
+
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
 
@@ -23,23 +24,33 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.supportActionBar?.hide() //隱藏title
-        setContentView(R.layout.login_loading)
-        val handler = Handler()
-        handler.postDelayed({setContentView(R.layout.login_landing)}, 3000)
+        setContentView(R.layout.activity_main)
+//        val handler = Handler()
+//        handler.postDelayed({setContentView(R.layout.login_landing)}, 3000)
 
         supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment).commit()
-        navigation_view.selectedItemId = R.id.navigation_home
-        navigation_view.setOnNavigationItemSelectedListener(listener)
-
-    }
-
-    fun loginbtn(view: View){
-        val button = findViewById<Button>(R.id.landingbutton)
-        val intent = Intent(this, loginActivity::class.java).apply {
-            putExtra(EXTRA_MESSAGE, intent)
+        navigation.selectedItemId = R.id.navigation_home
+        navigation.setOnNavigationItemSelectedListener{
+            when (it.itemId) {
+                R.id.navigation_home -> {
+                    val manager = supportFragmentManager
+                    val transaction = manager.beginTransaction()
+                    transaction.replace(R.id.container, homeFragment).commit()
+                }
+                R.id.navigation_scan -> {
+                    val t = supportFragmentManager.beginTransaction()
+                    t.replace(R.id.container, scanFragment).commit()
+                }
+                R.id.navigation_setting -> {
+                    val t = supportFragmentManager.beginTransaction()
+                    t.replace(R.id.container, settingFragment).commit()
+                }
+                else -> false
+            }
+            return@setOnNavigationItemSelectedListener true
         }
-        startActivity(intent)
     }
+
 
     private var listener = object : BottomNavigationView.OnNavigationItemSelectedListener {
         //設定navigationBar裡的item們的點擊事件 被點擊後採動態載入fragment的方式

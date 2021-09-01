@@ -6,11 +6,13 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.provider.AlarmClock
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ListView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -38,7 +40,10 @@ class loginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         this.supportActionBar?.hide() //隱藏title
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+//        setContentView(R.layout.activity_login)
+        setContentView(R.layout.login_loading)
+        val handler = Handler()
+        handler.postDelayed({setContentView(R.layout.login_landing)}, 3000)
 
 //        val listViewClickListener = ListViewClickListener()
 //        listViewClickListener.onItemClick()
@@ -53,6 +58,9 @@ class loginActivity : AppCompatActivity() {
 
     }
 
+    fun loginbtn(view: View){
+        setContentView(R.layout.activity_login)
+    }
 
     @SuppressLint("ResourceAsColor")
     fun openDialog(view: View) {
@@ -61,12 +69,12 @@ class loginActivity : AppCompatActivity() {
         listView = rowList.findViewById(R.id.listView)
         adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, array)
         listView.adapter = adapter
-        alertDialog.setPositiveButton("確定") { dialog, which -> }
-        alertDialog.setNegativeButton("取消") { dialog: DialogInterface?, which: Int ->  }
+//        alertDialog.setPositiveButton("確定") { dialog, which -> }
+//        alertDialog.setNegativeButton("取消") { dialog: DialogInterface?, which: Int ->  }
         adapter.notifyDataSetChanged()
         alertDialog.setView(rowList)
         dialog = alertDialog.create()
-        dialog.setTitle(R.string.Choosecommunity1)
+//        dialog.setTitle(R.string.Choosecommunity1)
 //        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(R.color.Choosecommunity)     //確定
@@ -91,7 +99,11 @@ class loginActivity : AppCompatActivity() {
     }
 
     fun landingbutton3(view: View) {
-        setContentView(R.layout.home)
+        val button = findViewById<Button>(R.id.landingbutton)
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra(AlarmClock.EXTRA_MESSAGE, intent)
+        }
+        startActivity(intent)
     }
     fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         if(listView!=null){
