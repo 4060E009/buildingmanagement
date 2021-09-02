@@ -1,34 +1,37 @@
 package com.example.buildingmanagement
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.provider.AlarmClock
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.ListView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_main.*
 
 val displayMetrics = DisplayMetrics()
 
-val heightPixels = displayMetrics.heightPixels //手機高度
-val widthPixels = displayMetrics.widthPixels
-
-val height = displayMetrics.heightPixels / displayMetrics.density //手機真實高度
-val weight = displayMetrics.widthPixels / displayMetrics.density //手機真實寬度
+//val height = displayMetrics.heightPixels / displayMetrics.density //手機真實高度
+//val width = displayMetrics.widthPixels / displayMetrics.density //手機真實寬度
 
 //val window: Window = dialog.getWindow()
 
 class loginActivity : AppCompatActivity() {
     private val TAG = "loginActivity"
+
+    var heightPixels = 0
+    var widthPixels = 0
 
     lateinit var adapter: ArrayAdapter<String>
     lateinit var listView: ListView
@@ -45,9 +48,11 @@ class loginActivity : AppCompatActivity() {
         val handler = Handler()
         handler.postDelayed({setContentView(R.layout.login_landing)}, 3000)
 
+        getDeviceWH() // initialize get device width and height
+
 //        val listViewClickListener = ListViewClickListener()
 //        listViewClickListener.onItemClick()
-
+//
 //        listView.setOnItemClickListener { parent, view, position, id ->
 //            val element = adapter.getItemAtPosition(position) // The item that was clicked
 //            val intent = Intent(this, loginActivity::class.java)
@@ -62,31 +67,86 @@ class loginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
     }
 
-    @SuppressLint("ResourceAsColor")
+    @SuppressLint("ResourceAsColor", "ResourceType")
     fun openDialog(view: View) {
         alertDialog = AlertDialog.Builder(this)
-        val rowList: View = layoutInflater.inflate(R.layout.my_dialog, null)
+        val rowList: View = layoutInflater.inflate(R.layout.my_dialog, container,false)
         listView = rowList.findViewById(R.id.listView)
         adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, array)
         listView.adapter = adapter
-//        alertDialog.setPositiveButton("確定") { dialog, which -> }
-//        alertDialog.setNegativeButton("取消") { dialog: DialogInterface?, which: Int ->  }
+
+        // title
+        var title = TextView(this)
+        title.text = "選擇社區"
+        title.setTextColor(R.color.forgotresidentcode)
+        title.textSize = 20F
+
+        alertDialog.setCustomTitle(title)
+        alertDialog.setPositiveButton("確定") { dialog, which ->  }
+        alertDialog.setNegativeButton("取消") { dialog: DialogInterface?, which: Int ->  }
         adapter.notifyDataSetChanged()
         alertDialog.setView(rowList)
         dialog = alertDialog.create()
-//        dialog.setTitle(R.string.Choosecommunity1)
-//        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
         dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(R.color.Choosecommunity)     //確定
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextSize(14F)
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(R.color.Choosecommunity)     //取消
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextSize(14F)
-//        dialog.getWindow()?.setLayout(heightPixels as Int, ViewGroup.LayoutParams.MATCH_PARENT)
+        dialog.window?.setLayout((widthPixels*0.8).toInt(), (heightPixels*0.674).toInt())
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.Choosecommunity)))     //確定
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))     //取消
     }
 
     fun closeDialog(view: View) {
         dialog.dismiss()
     }
+
+
+    // 住戶代碼不存在
+    @SuppressLint("ResourceType")
+    fun userCodeErrorDialog() {
+        alertDialog = AlertDialog.Builder(this, R.style.MyDialogStyle)
+            .setMessage("請確認您輸入的 iPad 住戶代碼正確無誤，再試一次吧！")
+            .setPositiveButton("好", null)   // listener argument can write some action
+
+        // title
+        var title = TextView(this)
+        title.text = "住戶代碼不存在"
+        title.setTextColor(R.color.forgotresidentcode)
+        title.textSize = 16F
+
+        alertDialog.setCustomTitle(title)
+
+
+        dialog = alertDialog.create()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
+        dialog.show()
+        dialog.window?.setLayout((widthPixels*0.778).toInt(), (heightPixels*0.281).toInt())
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))
+
+    }
+
+    //住戶代碼已被其他裝置綁定
+    @SuppressLint("ResourceType")
+    fun userCodeUsing(){
+        alertDialog = AlertDialog.Builder(this)
+            .setMessage("若您需要更換新的裝置，請洽詢社區管理中心協助解除綁定，並重新登入即可繼續此服務。")
+            .setPositiveButton("好", null)   // listener argument can write some action
+
+        // title
+        var title = TextView(this)
+        title.text = "住戶代碼已被其他裝置綁定"
+        title.setTextColor(R.color.forgotresidentcode)
+        title.textSize = 16F
+
+        alertDialog.setCustomTitle(title)
+
+        dialog = alertDialog.create()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
+        dialog.show()
+
+        dialog.window?.setLayout((widthPixels*0.778).toInt(), (heightPixels*0.313).toInt())
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))
+
+    }
+
 
     fun forgot(view: View){
         setContentView(R.layout.forgotresidentcode)
@@ -99,12 +159,27 @@ class loginActivity : AppCompatActivity() {
     }
 
     fun landingbutton3(view: View) {
-        val button = findViewById<Button>(R.id.landingbutton)
-        val intent = Intent(this, MainActivity::class.java).apply {
-            putExtra(AlarmClock.EXTRA_MESSAGE, intent)
+        if (landingedit.text.isNullOrEmpty()) {
+            userCodeErrorDialog()
         }
-        startActivity(intent)
+        val button = findViewById<Button>(R.id.landingbutton)
+//        val intent = Intent(this, MainActivity::class.java).apply {
+//            putExtra(AlarmClock.EXTRA_MESSAGE, intent)
+//        }
+//        startActivity(intent)
     }
+
+    // get device width and height
+    fun getDeviceWH() {
+        windowManager.defaultDisplay.getRealMetrics(displayMetrics)
+        widthPixels = displayMetrics.widthPixels
+        heightPixels = displayMetrics.heightPixels
+
+//        Log.d(TAG, "getDeviceWH: width " + displayMetrics.widthPixels)
+//        Log.d(TAG, "getDeviceWH: height " + displayMetrics.heightPixels)
+    }
+
+
     fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         if(listView!=null){
             listView!!.setBackgroundColor(listView!!.getResources().getColor(R.color.loading))

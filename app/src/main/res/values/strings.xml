@@ -7,6 +7,8 @@
     <string name="login">登入</string>
     <string name="Choosecommunity">請選擇社區</string>
     <string name="Choosecommunity1">選擇社區</string>
+    <string name="Cancel">取消</string>
+    <string name="confirm">確認</string>
     <string name="Choosecommunity2">請輸入住戶代碼</string>
     <string name="logintext">忘記住戶代碼?</string>
     <string name="privacy">登入即表示您同意 DUCTECH的</string>
