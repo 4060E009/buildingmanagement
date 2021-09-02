@@ -1,16 +1,14 @@
 package com.example.buildingmanagement
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.provider.AlarmClock
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
@@ -33,6 +31,7 @@ class loginActivity : AppCompatActivity() {
     var heightPixels = 0
     var widthPixels = 0
 
+
     lateinit var adapter: ArrayAdapter<String>
     lateinit var listView: ListView
     lateinit var alertDialog: AlertDialog.Builder
@@ -40,6 +39,7 @@ class loginActivity : AppCompatActivity() {
     val array = arrayListOf("社區1", "社區2", "社區3", "社區4", "社區5", "社區6", "社區7", "社區8", "社區9", "社區10",
         "社區11", "社區12", "社區13", "社區14", "社區15" )
 
+    @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         this.supportActionBar?.hide() //隱藏title
         super.onCreate(savedInstanceState)
@@ -50,21 +50,35 @@ class loginActivity : AppCompatActivity() {
 
         getDeviceWH() // initialize get device width and height
 
-//        val listViewClickListener = ListViewClickListener()
-//        listViewClickListener.onItemClick()
-//
-//        listView.setOnItemClickListener { parent, view, position, id ->
-//            val element = adapter.getItemAtPosition(position) // The item that was clicked
-//            val intent = Intent(this, loginActivity::class.java)
-//            Log.d(TAG, "list view Listener " + element)
-//            Log.d(TAG, "list view Listener intert" + intent)
-//            startActivity(intent)
-//        }
-
     }
 
     fun loginbtn(view: View){
         setContentView(R.layout.activity_login)
+
+        landingedit.addTextChangedListener(object : TextWatcher {
+            @SuppressLint("ResourceAsColor")
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                landingbutton3.setBackgroundResource(R.drawable.enable_btn)
+                landingbutton3.setTextColor(resources.getColor(R.color.white))
+                landingedit.setBackgroundResource(R.drawable.edit_border)
+                Log.d(TAG, "beforeTextChanged: ")
+            }
+
+            @SuppressLint("ResourceAsColor")
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (landingedit.text.isEmpty()){
+                    landingbutton3.setBackgroundResource(R.drawable.shape_circle)
+                    landingbutton3.setTextColor(resources.getColor(R.color.Choosecommunity))
+                    Log.d(TAG, "onTextChanged: ")
+                }
+            }
+
+            @SuppressLint("ResourceAsColor")
+            override fun afterTextChanged(s: Editable?) {
+                Log.d(TAG, "afterTextChanged: ")
+            }
+
+        })
     }
 
     @SuppressLint("ResourceAsColor", "ResourceType")
@@ -114,7 +128,6 @@ class loginActivity : AppCompatActivity() {
 
         alertDialog.setCustomTitle(title)
 
-
         dialog = alertDialog.create()
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
         dialog.show()
@@ -141,7 +154,6 @@ class loginActivity : AppCompatActivity() {
         dialog = alertDialog.create()
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
         dialog.show()
-
         dialog.window?.setLayout((widthPixels*0.778).toInt(), (heightPixels*0.313).toInt())
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))
 
@@ -158,16 +170,21 @@ class loginActivity : AppCompatActivity() {
         handler.postDelayed({setContentView(R.layout.privacypolicy1)}, 1000)
     }
 
-    fun landingbutton3(view: View) {
+    @SuppressLint("ResourceAsColor")
+    fun landingClick(view: View) {
+        val button = findViewById<Button>(R.id.landingbutton)
+
         if (landingedit.text.isNullOrEmpty()) {
+            landingedit.setBackgroundResource(R.drawable.error_border)
             userCodeErrorDialog()
         }
-        val button = findViewById<Button>(R.id.landingbutton)
-//        val intent = Intent(this, MainActivity::class.java).apply {
-//            putExtra(AlarmClock.EXTRA_MESSAGE, intent)
-//        }
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra(AlarmClock.EXTRA_MESSAGE, intent)
+        }
 //        startActivity(intent)
     }
+
+
 
     // get device width and height
     fun getDeviceWH() {
@@ -190,9 +207,7 @@ class loginActivity : AppCompatActivity() {
 
 }
 
-private fun <T> ArrayAdapter<T>.getItemAtPosition(position: Int): Any {
-    TODO("Not yet implemented")
-}
+
 
 
 

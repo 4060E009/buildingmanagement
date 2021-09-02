@@ -11,4 +11,5 @@
     <color name="Choosecommunity">#8A98B4</color>
     <color name="buttonbackground">#E0E4EC</color>
     <color name="forgotresidentcode">#3F414B</color>
+    <color name="errorborder">#FE8AA8</color>
 </resources>
