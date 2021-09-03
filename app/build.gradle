@@ -55,4 +55,6 @@ dependencies {
     //導航欄
     //noinspection GradleCompatible
     implementation 'com.google.android.material:material:1.2.0-alpha06'
+    // OkHttp
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
 }

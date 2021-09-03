@@ -8,15 +8,20 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.AlarmClock
 import android.text.Editable
+import android.text.SpannableString
+import android.text.Spanned
 import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.buildingmanagement.HttpApi.HttpApi
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
+import org.json.JSONArray
 
 val displayMetrics = DisplayMetrics()
 
@@ -31,24 +36,42 @@ class loginActivity : AppCompatActivity() {
     var heightPixels = 0
     var widthPixels = 0
 
+    val httpApi = HttpApi()
 
     lateinit var adapter: ArrayAdapter<String>
     lateinit var listView: ListView
     lateinit var alertDialog: AlertDialog.Builder
     lateinit var dialog: AlertDialog
-    val array = arrayListOf("社區1", "社區2", "社區3", "社區4", "社區5", "社區6", "社區7", "社區8", "社區9", "社區10",
-        "社區11", "社區12", "社區13", "社區14", "社區15" )
+//    val array = arrayListOf("社區1", "社區2", "社區3", "社區4", "社區5", "社區6", "社區7", "社區8", "社區9", "社區10",
+//        "社區11", "社區12", "社區13", "社區14", "社區15" )
+
+    var array: ArrayList<String> = arrayListOf()
 
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         this.supportActionBar?.hide() //隱藏title
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_login)
         setContentView(R.layout.login_loading)
         val handler = Handler()
         handler.postDelayed({setContentView(R.layout.login_landing)}, 3000)
 
+
         getDeviceWH() // initialize get device width and height
+
+        httpApi.GetAllProjectName(object: HttpApi.OnRequestListener {
+            override fun onSuccess(result: Any) {
+                Log.d(TAG, "onSuccess: " + result)
+                val list = JSONArray(result as String)
+                for (i in 0 until list.length()) {
+                    Log.d(TAG, "for " + list[i])
+                    array.add(list[i] as String)
+                }
+            }
+
+            override fun onError() {
+//                TODO("Not yet implemented")
+            }
+        })
 
     }
 
@@ -88,6 +111,10 @@ class loginActivity : AppCompatActivity() {
         listView = rowList.findViewById(R.id.listView)
         adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, array)
         listView.adapter = adapter
+        listView.setOnItemClickListener { parent, view, position, id ->
+            spinner.text = array[position]
+            spinner.setTextColor(R.color.forgotresidentcode)
+        }
 
         // title
         var title = TextView(this)
@@ -117,7 +144,6 @@ class loginActivity : AppCompatActivity() {
     @SuppressLint("ResourceType")
     fun userCodeErrorDialog() {
         alertDialog = AlertDialog.Builder(this, R.style.MyDialogStyle)
-            .setMessage("請確認您輸入的 iPad 住戶代碼正確無誤，再試一次吧！")
             .setPositiveButton("好", null)   // listener argument can write some action
 
         // title
@@ -127,6 +153,12 @@ class loginActivity : AppCompatActivity() {
         title.textSize = 16F
 
         alertDialog.setCustomTitle(title)
+
+        //message
+        var message = SpannableString("請確認您輸入的 iPad 住戶代碼正確無誤，再試一次吧！")
+            message.setSpan(ForegroundColorSpan(R.color.Choosecommunity),0,message.length,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        alertDialog.setMessage(message)
 
         dialog = alertDialog.create()
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
@@ -140,7 +172,6 @@ class loginActivity : AppCompatActivity() {
     @SuppressLint("ResourceType")
     fun userCodeUsing(){
         alertDialog = AlertDialog.Builder(this)
-            .setMessage("若您需要更換新的裝置，請洽詢社區管理中心協助解除綁定，並重新登入即可繼續此服務。")
             .setPositiveButton("好", null)   // listener argument can write some action
 
         // title
@@ -150,6 +181,12 @@ class loginActivity : AppCompatActivity() {
         title.textSize = 16F
 
         alertDialog.setCustomTitle(title)
+
+        //message
+        var message = SpannableString("若您需要更換新的裝置，請洽詢社區管理中心協助解除綁定，並重新登入即可繼續此服務。")
+        message.setSpan(ForegroundColorSpan(R.color.Choosecommunity),0,message.length,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        alertDialog.setMessage(message)
 
         dialog = alertDialog.create()
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
@@ -170,6 +207,7 @@ class loginActivity : AppCompatActivity() {
         handler.postDelayed({setContentView(R.layout.privacypolicy1)}, 1000)
     }
 
+    // login and start MainActivity
     @SuppressLint("ResourceAsColor")
     fun landingClick(view: View) {
         val button = findViewById<Button>(R.id.landingbutton)
@@ -184,8 +222,6 @@ class loginActivity : AppCompatActivity() {
 //        startActivity(intent)
     }
 
-
-
     // get device width and height
     fun getDeviceWH() {
         windowManager.defaultDisplay.getRealMetrics(displayMetrics)
@@ -196,17 +232,15 @@ class loginActivity : AppCompatActivity() {
 //        Log.d(TAG, "getDeviceWH: height " + displayMetrics.heightPixels)
     }
 
+    fun backLoginLanding(view: View) {
+        setContentView(R.layout.login_landing)
+    }
 
-    fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        if(listView!=null){
-            listView!!.setBackgroundColor(listView!!.getResources().getColor(R.color.loading))
-        }
-        p1?.setBackgroundColor(p1.getResources().getColor(R.color.loading))
-        listView= p1 as ListView
+    fun close_view(view: View){
+        setContentView(R.layout.activity_login)
     }
 
 }
-
 
 
 
