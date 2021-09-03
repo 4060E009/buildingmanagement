@@ -22,6 +22,7 @@ import com.example.buildingmanagement.HttpApi.HttpApi
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
+import kotlin.properties.Delegates
 
 val displayMetrics = DisplayMetrics()
 
@@ -42,6 +43,9 @@ class loginActivity : AppCompatActivity() {
     lateinit var listView: ListView
     lateinit var alertDialog: AlertDialog.Builder
     lateinit var dialog: AlertDialog
+    lateinit var current: View
+    var isfirstview:Boolean = true
+
 //    val array = arrayListOf("社區1", "社區2", "社區3", "社區4", "社區5", "社區6", "社區7", "社區8", "社區9", "社區10",
 //        "社區11", "社區12", "社區13", "社區14", "社區15" )
 
@@ -109,11 +113,23 @@ class loginActivity : AppCompatActivity() {
         alertDialog = AlertDialog.Builder(this)
         val rowList: View = layoutInflater.inflate(R.layout.my_dialog, container,false)
         listView = rowList.findViewById(R.id.listView)
+
         adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, array)
         listView.adapter = adapter
         listView.setOnItemClickListener { parent, view, position, id ->
             spinner.text = array[position]
             spinner.setTextColor(R.color.forgotresidentcode)
+//            view.setBackgroundResource(R.drawable.list_view)
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))
+
+            if (current != view && isfirstview){
+                current.setBackgroundResource(R.layout.my_dialog)
+                current = view
+            }else{
+                view.setBackgroundResource(R.drawable.list_view)
+                current = view
+//                current.setBackgroundColor(R.drawable.list_view)
+            }
         }
 
         // title
