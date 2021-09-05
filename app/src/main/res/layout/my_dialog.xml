@@ -9,6 +9,8 @@
             android:id="@+id/listView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:choiceMode="singleChoice"
+            android:textColor="@drawable/list_view_selector"
             android:divider="@null" />
 
 </LinearLayout>

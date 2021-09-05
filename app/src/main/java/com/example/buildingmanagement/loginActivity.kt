@@ -15,12 +15,17 @@ import android.text.style.ForegroundColorSpan
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.marginTop
+import com.example.buildingmanagement.HttpApi.BindUserDat
 import com.example.buildingmanagement.HttpApi.HttpApi
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.login_landing.*
 import org.json.JSONArray
 import kotlin.properties.Delegates
 
@@ -43,8 +48,6 @@ class loginActivity : AppCompatActivity() {
     lateinit var listView: ListView
     lateinit var alertDialog: AlertDialog.Builder
     lateinit var dialog: AlertDialog
-    lateinit var current: View
-    var isfirstview:Boolean = true
 
 //    val array = arrayListOf("社區1", "社區2", "社區3", "社區4", "社區5", "社區6", "社區7", "社區8", "社區9", "社區10",
 //        "社區11", "社區12", "社區13", "社區14", "社區15" )
@@ -57,26 +60,51 @@ class loginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_loading)
         val handler = Handler()
-        handler.postDelayed({setContentView(R.layout.login_landing)}, 3000)
+        handler.postDelayed({
+            initLandingPage()
+        }, 3000)
 
 
         getDeviceWH() // initialize get device width and height
 
-        httpApi.GetAllProjectName(object: HttpApi.OnRequestListener {
-            override fun onSuccess(result: Any) {
-                Log.d(TAG, "onSuccess: " + result)
-                val list = JSONArray(result as String)
+        httpApi.GetAllProjectName {
+            onSuccess {
+                Log.d(TAG, "GetAllProjectName onSuccess: ${it}")
+                val list = JSONArray(it as String)
                 for (i in 0 until list.length()) {
-                    Log.d(TAG, "for " + list[i])
+                    Log.d(TAG, "item -> ${list[i]}")
                     array.add(list[i] as String)
                 }
             }
+        }
 
-            override fun onError() {
-//                TODO("Not yet implemented")
-            }
-        })
+//        httpApi.BindUserData("1", "2", "3") {
+//             onSuccess {
+//                 it as BindUserDat
+//                 it.address
+//             }
+//        }
+    }
 
+
+    fun initLandingPage() {
+        setContentView(R.layout.login_landing)
+        imageview.layoutParams.height = (heightPixels * 0.669).toInt()
+        (textview.layoutParams as RelativeLayout.LayoutParams).apply {
+            topMargin = (heightPixels * 0.041).toInt()
+            bottomMargin = (heightPixels * 0.016).toInt()
+        }
+        (textview1.layoutParams as RelativeLayout.LayoutParams).apply {
+            topMargin = (heightPixels * 0.041).toInt()
+            bottomMargin = (heightPixels * 0.016).toInt()
+        }
+        (textview2.layoutParams as RelativeLayout.LayoutParams).apply {
+            bottomMargin = (heightPixels * 0.063).toInt()
+        }
+        (landingbutton.layoutParams as RelativeLayout.LayoutParams).apply {
+            height = (heightPixels * 0.069).toInt()
+            bottomMargin = (heightPixels * 0.056).toInt()
+        }
     }
 
     fun loginbtn(view: View){
@@ -114,22 +142,13 @@ class loginActivity : AppCompatActivity() {
         val rowList: View = layoutInflater.inflate(R.layout.my_dialog, container,false)
         listView = rowList.findViewById(R.id.listView)
 
-        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, array)
+        adapter = ArrayAdapter(this, R.layout.listview_item, array)
         listView.adapter = adapter
         listView.setOnItemClickListener { parent, view, position, id ->
             spinner.text = array[position]
             spinner.setTextColor(R.color.forgotresidentcode)
-//            view.setBackgroundResource(R.drawable.list_view)
+            view.setBackgroundResource(R.drawable.list_view)
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))
-
-            if (current != view && isfirstview){
-                current.setBackgroundResource(R.layout.my_dialog)
-                current = view
-            }else{
-                view.setBackgroundResource(R.drawable.list_view)
-                current = view
-//                current.setBackgroundColor(R.drawable.list_view)
-            }
         }
 
         // title
@@ -140,7 +159,7 @@ class loginActivity : AppCompatActivity() {
 
         alertDialog.setCustomTitle(title)
         alertDialog.setPositiveButton("確定") { dialog, which ->  }
-        alertDialog.setNegativeButton("取消") { dialog: DialogInterface?, which: Int ->  }
+        alertDialog.setNegativeButton("取消") { dialog: DialogInterface?, which: Int -> closeDialog() }
         adapter.notifyDataSetChanged()
         alertDialog.setView(rowList)
         dialog = alertDialog.create()
@@ -149,12 +168,15 @@ class loginActivity : AppCompatActivity() {
         dialog.window?.setLayout((widthPixels*0.8).toInt(), (heightPixels*0.674).toInt())
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.Choosecommunity)))     //確定
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))     //取消
+
     }
 
-    fun closeDialog(view: View) {
+    @SuppressLint("ResourceAsColor")
+    fun closeDialog() {
+        spinner.text = resources.getString(R.string.Choosecommunity)
+        spinner.setTextColor(resources.getColor(R.color.Choosecommunity))
         dialog.dismiss()
     }
-
 
     // 住戶代碼不存在
     @SuppressLint("ResourceType")
@@ -249,7 +271,7 @@ class loginActivity : AppCompatActivity() {
     }
 
     fun backLoginLanding(view: View) {
-        setContentView(R.layout.login_landing)
+        initLandingPage()
     }
 
     fun close_view(view: View){

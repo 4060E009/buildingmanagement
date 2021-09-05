@@ -8,16 +8,17 @@ import java.io.IOException
 
 class HttpApi {
     val TAG = "HttpApi"
-    private var onRequestListener : OnRequestListener? = null
+    private lateinit var mlistener: OnResponseListener
     var client: OkHttpClient? = null
     private val baseUrl = "https://asia-east2-ductech-cms.cloudfunctions.net/"
 
     init {
         client = OkHttpClient()
     }
+
     //所有社區
-    fun GetAllProjectName(listener: OnRequestListener) {
-        onRequestListener = listener
+    fun GetAllProjectName(listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         val formBody = builder.build()
@@ -28,16 +29,16 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
 
             override fun onResponse(call: Call, response: Response) {
                 val responseStr = response.body()?.string()
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
                     if (responseStr != null) {
-                        onRequestListener?.onSuccess(responseStr)
+                        mlistener._onSuccess?.invoke((responseStr))
                     }
 //                    val itemList = JSONObject(responseStr)
                     // TODO("response to json object")
@@ -50,8 +51,8 @@ class HttpApi {
     }
 
     //用戶資訊
-    fun BindUserData(projectName: String, residentSerialNumber: String, phoneID: String, listener: OnRequestListener) {
-        onRequestListener = listener
+    fun BindUserData(projectName: String, residentSerialNumber: String, phoneID: String, listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         val request: Request?
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -65,7 +66,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
 
             lateinit var bindUserDat: BindUserDat
@@ -73,7 +74,7 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
                     val itemList = JSONObject(responseStr)
                     bindUserDat = BindUserDat(
@@ -87,7 +88,7 @@ class HttpApi {
                         points = itemList.getString("points")
                     )
                     // TODO("response to json object")
-                    onRequestListener?.onSuccess(itemList)
+                    mlistener._onSuccess?.invoke(itemList)
                     Log.d(TAG, "" + itemList)
                 }
             }
@@ -95,8 +96,8 @@ class HttpApi {
     }
 
     //包裹資訊
-    fun GetUserMail(projectName: String, houseSerialNumber: String, listener: OnRequestListener) {
-        onRequestListener = listener
+    fun GetUserMail(projectName: String, houseSerialNumber: String, listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -109,7 +110,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
 
             lateinit var getUserMail: GetUserMail
@@ -118,7 +119,7 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
                     val itemList = JSONArray(responseStr)
 //                    Log.d(TAG, "itemList: " + itemList )
@@ -145,7 +146,7 @@ class HttpApi {
                         arrayList.add(getUserMail)
                     }
                     // TODO("response to json object")
-                    onRequestListener?.onSuccess(itemList)
+                    mlistener._onSuccess?.invoke(itemList)
                     Log.d(TAG, "" + itemList)
                 }
             }
@@ -153,8 +154,8 @@ class HttpApi {
     }
 
     //行事曆資訊
-    fun GetYearCalendar(projectName: String, Year: String,listener: OnRequestListener) {
-        onRequestListener = listener
+    fun GetYearCalendar(projectName: String, Year: String,listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -167,7 +168,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
             var arrayList = arrayListOf<GetYearCalendar>()
             lateinit var getYearCalendar: GetYearCalendar
@@ -175,7 +176,7 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
                     val itemList = JSONArray(responseStr)
                     for (i in 0 until itemList.length()) {
@@ -189,7 +190,7 @@ class HttpApi {
                         arrayList.add(getYearCalendar)
                     }
                     // TODO("response to json object")
-                    onRequestListener?.onSuccess(itemList)
+                    mlistener._onSuccess?.invoke(itemList)
                     Log.d(TAG, "" + itemList)
                 }
             }
@@ -197,8 +198,8 @@ class HttpApi {
     }
 
     //公告資訊
-    fun GetUserAllAnnouncement(projectName: String ,listener: OnRequestListener) {
-        onRequestListener = listener
+    fun GetUserAllAnnouncement(projectName: String ,listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -210,7 +211,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
             var arrayList = arrayListOf<GetUserAllAnnouncement>()
             lateinit var getUserAllAnnouncement: GetUserAllAnnouncement
@@ -218,7 +219,7 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
                     val itemList = JSONArray(responseStr)
                     for (i in 0 until itemList.length()) {
@@ -234,7 +235,7 @@ class HttpApi {
                         arrayList.add(getUserAllAnnouncement)
                     }
                     // TODO("response to json object")
-                    onRequestListener?.onSuccess(itemList)
+                    mlistener._onSuccess?.invoke(itemList)
                     Log.d(TAG, "" + itemList)
                 }
             }
@@ -242,8 +243,8 @@ class HttpApi {
     }
 
     //公設資訊
-    fun UserGetAllAmenities(projectName: String,listener: OnRequestListener) {
-        onRequestListener = listener
+    fun UserGetAllAmenities(projectName: String,listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -255,7 +256,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
             var arrayList = arrayListOf<UserGetAllAmenities>()
             lateinit var userGetAllAmenities: UserGetAllAmenities
@@ -263,7 +264,7 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
                     val itemList = JSONArray(responseStr)
                     for (i in 0 until itemList.length()) {
@@ -284,7 +285,7 @@ class HttpApi {
                         arrayList.add(userGetAllAmenities)
                     }
                     // TODO("response to json object")
-                    onRequestListener?.onSuccess(itemList)
+                    mlistener._onSuccess?.invoke(itemList)
                     Log.d(TAG, "" + itemList)
                 }
             }
@@ -292,8 +293,8 @@ class HttpApi {
     }
 
     //已預約時間人數
-    fun UserGetDateReservation(projectName: String,AmenititesID: String,listener: OnRequestListener) {
-        onRequestListener = listener
+    fun UserGetDateReservation(projectName: String,AmenititesID: String,listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         val request: Request?
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -306,7 +307,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
             var arrayList = arrayListOf<UserGetDateReservation>()
             lateinit var userGetDateReservation: UserGetDateReservation
@@ -314,7 +315,7 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
                     val itemList = JSONArray(responseStr)
                     for (i in 0 until itemList.length()) {
@@ -327,7 +328,7 @@ class HttpApi {
                         arrayList.add(userGetDateReservation)
                     }
                     // TODO("response to json object")
-                    onRequestListener?.onSuccess(itemList)
+                    mlistener._onSuccess?.invoke(itemList)
                     Log.d(TAG, "" + itemList)
                 }
             }
@@ -338,8 +339,8 @@ class HttpApi {
     fun UserAddNewReservation(projectName: String, AmenitiesName: String, AmenitiesIdentify:String,
                               ReservationDate:String, ReservationTime:String, Name:String, HouseName:String,
                               Floor:String, Symbol:String, ResidentSerialNumber:String, ReservationNumber:Int,
-                              Point:Int, Identify:String, Time:String,listener: OnRequestListener) {
-        onRequestListener = listener
+                              Point:Int, Identify:String, Time:String,listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -364,7 +365,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
 
             //            lateinit var userAddNewReservation: UserAddNewReservation
@@ -373,9 +374,11 @@ class HttpApi {
 
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
-                    onRequestListener?.onSuccess(Any())
+                    if (responseStr != null) {
+                        mlistener._onSuccess?.invoke(responseStr)
+                    }
 //                    val itemList = JSONArray(responseStr)
 //                    // TODO("response to json object")
 //                    onRequestListener?.onSuccess(itemList)
@@ -386,8 +389,8 @@ class HttpApi {
     }
 
     //公設預約記錄
-    fun GetUserALLRese(projectName: String, houseSerialNumber: String, listener: OnRequestListener) {
-        onRequestListener = listener
+    fun GetUserALLRese(projectName: String, houseSerialNumber: String, listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -400,7 +403,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
             var arrayList = arrayListOf<GetUserALLRese>()
             lateinit var getUserALLRese: GetUserALLRese
@@ -408,7 +411,7 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
                     val itemList = JSONArray(responseStr)
                     for (i in 0 until itemList.length()) {
@@ -431,7 +434,7 @@ class HttpApi {
                         arrayList.add(getUserALLRese)
                     }
                     // TODO("response to json object")
-                    onRequestListener?.onSuccess(itemList)
+                    mlistener._onSuccess?.invoke(itemList)
                     Log.d(TAG, "" + itemList)
                 }
             }
@@ -439,8 +442,8 @@ class HttpApi {
     }
 
     //用戶取消公設預約
-    fun UserDeleteReservaion(projectName: String, ResSN: String, Point:Int, Time:String, Identify:String,listener: OnRequestListener) {
-        onRequestListener = listener
+    fun UserDeleteReservaion(projectName: String, ResSN: String, Point:Int, Time:String, Identify:String,listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -456,7 +459,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
 
             //lateinit var userDeleteReservaion: UserDeleteReservaion
@@ -464,9 +467,11 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
-                    onRequestListener?.onSuccess(Any())
+                    if (responseStr != null) {
+                        mlistener._onSuccess?.invoke(responseStr)
+                    }
 //                    val itemList = JSONObject(responseStr)
 //                    // TODO("response to json object")
 //                    onRequestListener?.onSuccess(itemList)
@@ -477,8 +482,8 @@ class HttpApi {
     }
 
     //點數紀錄_ResPointLog
-    fun GetUserPointLog_ResPointLog(projectName: String, houseSerialNumber: String,  listener: OnRequestListener) {
-        onRequestListener = listener
+    fun GetUserPointLog_ResPointLog(projectName: String, houseSerialNumber: String,  listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -491,7 +496,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
             var arrayList = arrayListOf<GetUserPointLog_ResPointLog>()
             lateinit var getUserPointLog_ResPointLog: GetUserPointLog_ResPointLog
@@ -499,7 +504,7 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
                     val itemList = JSONObject(responseStr)
                     getUserPointLog_ResPointLog = GetUserPointLog_ResPointLog(
@@ -514,15 +519,15 @@ class HttpApi {
                         logID = itemList.getString("logID"),
                     )
                     // TODO("response to json object")
-                    onRequestListener?.onSuccess(itemList)
+                    mlistener._onSuccess?.invoke(itemList)
                     Log.d(TAG, "" + itemList)
                 }
             }
         })
     }
     //點數紀錄_DepositPointLog
-    fun GetUserPointLog_DepositPointLog(projectName: String, houseSerialNumber: String,  listener: OnRequestListener) {
-        onRequestListener = listener
+    fun GetUserPointLog_DepositPointLog(projectName: String, houseSerialNumber: String,  listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -535,7 +540,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
             var arrayList = arrayListOf<GetUserPointLog_DepositPointLog>()
             lateinit var getUserPointLog_DepositPointLog: GetUserPointLog_DepositPointLog
@@ -543,7 +548,7 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
                     val itemList = JSONArray(responseStr)
                     for (i in 0 until itemList.length()) {
@@ -558,7 +563,7 @@ class HttpApi {
                         arrayList.add(getUserPointLog_DepositPointLog)
                     }
                     // TODO("response to json object")
-                    onRequestListener?.onSuccess(itemList)
+                    mlistener._onSuccess?.invoke(itemList)
                     Log.d(TAG, "" + itemList)
                 }
             }
@@ -566,8 +571,8 @@ class HttpApi {
     }
 
     //意見留言資訊
-    fun UserGetMessage(projectName: String, ResidentSN: String, listener: OnRequestListener) {
-        onRequestListener = listener
+    fun UserGetMessage(projectName: String, ResidentSN: String, listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -580,7 +585,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
             var arrayList = arrayListOf<UserGetMessage>()
             lateinit var userGetMessage: UserGetMessage
@@ -588,7 +593,7 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
                     val itemList = JSONArray(responseStr)
                     for (i in 0 until itemList.length()) {
@@ -603,7 +608,7 @@ class HttpApi {
                         arrayList.add(userGetMessage)
                     }
                     // TODO("response to json object")
-                    onRequestListener?.onSuccess(itemList)
+                    mlistener._onSuccess?.invoke(itemList)
 //                    Log.d(TAG, "" + itemList)
                 }
             }
@@ -613,8 +618,8 @@ class HttpApi {
     //新增留言
     fun UserCreateMess(projectName: String, Time: String, Symbol:String,
                        Name:String, HouseName:String, HouseSerialNumber:String, Title:String,
-                       Floor:String, MessageID:String, Content:String, listener: OnRequestListener) {
-        onRequestListener = listener
+                       Floor:String, MessageID:String, Content:String, listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -635,7 +640,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
 
             //lateinit var userCreateMess: UserCreateMess
@@ -643,9 +648,11 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
-                    onRequestListener?.onSuccess(Any())
+                    if (responseStr != null) {
+                        mlistener._onSuccess?.invoke(responseStr)
+                    }
 //                    val itemList = JSONObject(responseStr)
 //                    // TODO("response to json object")
 //                    onRequestListener?.onSuccess(itemList)
@@ -656,8 +663,8 @@ class HttpApi {
     }
 
     //留言內容
-    fun UserGetMessChat(projectName: String, MessageID: String, listener: OnRequestListener) {
-        onRequestListener = listener
+    fun UserGetMessChat(projectName: String, MessageID: String, listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -670,7 +677,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
             var arrayList = arrayListOf<UserGetMessChat>()
             lateinit var userGetMessChat: UserGetMessChat
@@ -678,7 +685,7 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
                     val itemList = JSONArray(responseStr)
                     for (i in 0 until itemList.length()) {
@@ -692,7 +699,7 @@ class HttpApi {
                         arrayList.add(userGetMessChat)
                     }
                     // TODO("response to json object")
-                    onRequestListener?.onSuccess(itemList)
+                    mlistener._onSuccess?.invoke(itemList)
 //                    Log.d(TAG, "" + itemList)
                 }
             }
@@ -700,8 +707,8 @@ class HttpApi {
     }
 
     //新增留言內容
-    fun SendMessage(projectName: String, MessageTime: String, MessageID:String, Content:String, IsManager:Boolean, listener: OnRequestListener) {
-        onRequestListener = listener
+    fun SendMessage(projectName: String, MessageTime: String, MessageID:String, Content:String, IsManager:Boolean, listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -717,7 +724,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
 
             //            lateinit var sendMessage: SendMessage
@@ -725,9 +732,11 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
-                    onRequestListener?.onSuccess(Any())
+                    if (responseStr != null) {
+                        mlistener._onSuccess?.invoke(responseStr)
+                    }
 //                    val itemList = JSONObject(responseStr)
                     // TODO("response to json object")
 //                    onRequestListener?.onSuccess(itemList)
@@ -738,8 +747,8 @@ class HttpApi {
     }
 
     //當期瓦斯抄錶
-    fun UserGetGas(projectName: String, HouseSN : String,listener: OnRequestListener) {
-        onRequestListener = listener
+    fun UserGetGas(projectName: String, HouseSN : String,listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -752,7 +761,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
 
             lateinit var userGetGas: UserGetGas
@@ -760,7 +769,7 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
                     val itemList = JSONObject(responseStr)
                     userGetGas = UserGetGas(
@@ -771,7 +780,7 @@ class HttpApi {
                         isOpen = itemList.getBoolean("isOpen")
                     )
                     // TODO("response to json object")
-                    onRequestListener?.onSuccess(itemList)
+                    mlistener._onSuccess?.invoke(itemList)
 //                    Log.d(TAG, "" + itemList)
                 }
             }
@@ -779,8 +788,8 @@ class HttpApi {
     }
 
     //上傳瓦斯度數
-    fun RegisterGas(projectName: String, HouseSN: String, BookTime:String, Booker:String, Degree:String, GasID:String,  listener: OnRequestListener) {
-        onRequestListener = listener
+    fun RegisterGas(projectName: String, HouseSN: String, BookTime:String, Booker:String, Degree:String, GasID:String,  listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -797,7 +806,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
 
             //lateinit var registerGas: RegisterGas
@@ -805,9 +814,11 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
-                    onRequestListener?.onSuccess(Any())
+                    if (responseStr != null) {
+                        mlistener._onSuccess?.invoke(responseStr)
+                    }
 //                    val itemList = JSONObject(responseStr)
                     // TODO("response to json object")
 //                    onRequestListener?.onSuccess(itemList)
@@ -818,8 +829,8 @@ class HttpApi {
     }
 
     //瓦斯抄錶紀錄
-    fun UserGetGasLog(projectName: String, HouseSN: String,listener: OnRequestListener) {
-        onRequestListener = listener
+    fun UserGetGasLog(projectName: String, HouseSN: String,listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -832,7 +843,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
             var arrayList = arrayListOf<UserGetGasLog>()
             lateinit var userGetGasLog: UserGetGasLog
@@ -840,7 +851,7 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
                     val itemList = JSONArray(responseStr)
                     for (i in 0 until itemList.length()) {
@@ -853,7 +864,7 @@ class HttpApi {
                         arrayList.add(userGetGasLog)
                     }
                     // TODO("response to json object")
-                    onRequestListener?.onSuccess(itemList)
+                    mlistener._onSuccess?.invoke(itemList)
                     Log.d(TAG, "" + itemList)
                 }
             }
@@ -861,8 +872,8 @@ class HttpApi {
     }
 
     //當期管理費
-    fun UserGetMagFee(listener: OnRequestListener) {
-        onRequestListener = listener
+    fun UserGetMagFee(listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         val formBody = builder.build()
@@ -873,7 +884,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
             var arrayList = arrayListOf<UserGetMagFee>()
             lateinit var userGetMagFee: UserGetMagFee
@@ -881,7 +892,7 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
                     val itemList = JSONArray(responseStr)
                     for (i in 0 until itemList.length()) {
@@ -899,7 +910,7 @@ class HttpApi {
                         arrayList.add(userGetMagFee)
                     }
                     // TODO("response to json object")
-                    onRequestListener?.onSuccess(itemList)
+                    mlistener._onSuccess?.invoke(itemList)
 //                    Log.d(TAG, "" + itemList)
                 }
             }
@@ -907,8 +918,8 @@ class HttpApi {
     }
 
     //變更用戶名稱
-    fun UpdateUserName(projectName: String, ResidentSerialNumber: String, Name:String, listener: OnRequestListener) {
-        onRequestListener = listener
+    fun UpdateUserName(projectName: String, ResidentSerialNumber: String, Name:String, listener: OnResponseListener.()->Unit) {
+        mlistener = OnResponseListener().also(listener)
         var request: Request? = null
         val builder = FormBody.Builder()
         builder.add("ProjectName", projectName)
@@ -922,7 +933,7 @@ class HttpApi {
         client?.newCall(request)?.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.d(TAG, "onFailure: " + e)
-                onRequestListener?.onError()
+                mlistener._onError?.invoke()
             }
 
             //lateinit var updateUserName: UpdateUserName
@@ -930,9 +941,11 @@ class HttpApi {
                 val responseStr = response.body()?.string()
 
                 if (responseStr == "null" || responseStr == "Error"){
-                    onRequestListener?.onError()
+                    mlistener._onError?.invoke()
                 }else{
-                    onRequestListener?.onSuccess(Any())
+                    if (responseStr != null) {
+                        mlistener._onSuccess?.invoke(responseStr)
+                    }
 //                    val itemList = JSONObject(responseStr)
                     // TODO("response to json object")
 //                    onRequestListener?.onSuccess(itemList)
@@ -942,9 +955,17 @@ class HttpApi {
         })
     }
 
-    interface OnRequestListener {
-        fun onSuccess(result: Any)
-        fun onError()
+    inner class OnResponseListener {
+        internal var _onSuccess: ((Any)->Unit)? = null
+        internal var _onError: (()->Unit)? = null
+
+        fun onSuccess(result: (Any)->Unit) {
+            _onSuccess = result
+        }
+
+        fun onError(callback: ()->Unit) {
+            _onError = callback
+        }
     }
 
 }
