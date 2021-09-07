@@ -52,20 +52,20 @@
             android:layout_above="@id/landingbutton" />
 
         <Button
-            android:onClick="loginbtn"
             android:id="@+id/landingbutton"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginStart="35dp"
+            android:layout_alignParentBottom="true"
             android:layout_marginEnd="35dp"
+            android:layout_marginStart="35dp"
             android:background="@drawable/shape_circle"
             android:backgroundTint="@color/white"
+            android:onClick="loginbtn"
             android:stateListAnimator="@null"
             android:text="@string/loadingbutton"
             android:textColor="@color/loading"
             android:textSize="14dp"
             android:textStyle="bold"
-            android:layout_alignParentBottom="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

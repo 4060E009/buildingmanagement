@@ -23,10 +23,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.supportActionBar?.hide() //隱藏title
+//        this.supportActionBar?.hide() //隱藏title
         setContentView(R.layout.activity_main)
-//        val handler = Handler()
-//        handler.postDelayed({setContentView(R.layout.login_landing)}, 3000)
 
         supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment).commit()
         navigation.selectedItemId = R.id.navigation_home

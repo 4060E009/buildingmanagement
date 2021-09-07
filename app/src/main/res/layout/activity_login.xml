@@ -12,42 +12,47 @@
         android:layout_height="0dp"
         android:background="@color/white"
         android:elevation="3dp"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:elevation="55dp"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+
         <ImageButton
             android:id="@+id/returnBtn"
             android:onClick="backLoginLanding"
             android:layout_width="30dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:background="@null"
             android:scaleType="fitCenter"
             android:src="@drawable/icon_android_cms_app_bar_back"
             android:translationZ="50dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="20dp"
             tools:ignore="UsingOnClickInXml" />
-    </androidx.appcompat.widget.Toolbar>
 
 
     <RelativeLayout
         android:id="@+id/loginrelative"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        tools:ignore="NotSibling"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/logintext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="100dp"
+            android:includeFontPadding="false"
+            android:text="@string/login"
+            android:textColor="@color/forgotresidentcode"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/spinner"
@@ -57,13 +62,50 @@
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="30dp"
-            android:text="@string/Choosecommunity"
-            android:textSize="16dp"
-            android:textAlignment="textStart"
-            android:paddingLeft="16dp"
-            android:textColor="#A0A0A0"
             android:background="@drawable/shape_text"
-            android:onClick="openDialog" />
+            android:onClick="openDialog"
+            android:paddingLeft="16dp"
+            android:text="@string/Choosecommunity"
+            android:textAlignment="textStart"
+            android:textColor="#A0A0A0"
+            android:textSize="16dp" />
+
+        <EditText
+            android:id="@+id/landingedit"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@id/spinner"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edit_border"
+            android:cursorVisible="true"
+            android:gravity="left|center_vertical"
+            android:hint="@string/Choosecommunity2"
+            android:paddingLeft="16dp"
+            android:singleLine="true"
+            android:stateListAnimator="@null"
+            android:textColor="@color/Choosecommunity"
+            android:textCursorDrawable="@drawable/textcursor"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/textview3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/landingedit"
+            android:layout_marginLeft="300dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:gravity="right|center_vertical"
+            android:onClick="forgot"
+            android:text="@string/logintext"
+            android:textColor="@color/loading"
+            android:layout_above="@id/landingbutton3"
+            android:textSize="14dp" />
 
         <Button
             android:id="@+id/landingbutton3"
@@ -80,57 +122,6 @@
             android:textColor="@color/Choosecommunity"
             android:textSize="14dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <EditText
-            android:id="@+id/landingedit"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_below="@id/spinner"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/edit_border"
-            android:gravity="left|center_vertical"
-            android:hint="@string/Choosecommunity2"
-            android:paddingLeft="16dp"
-            android:stateListAnimator="@null"
-            android:textColor="@color/Choosecommunity"
-            android:textSize="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-
-
-
-        <TextView
-            android:id="@+id/textview3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/landingedit"
-            android:layout_marginLeft="300dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:gravity="right|center_vertical"
-            android:onClick="forgot"
-            android:text="@string/logintext"
-            android:textColor="@color/loading"
-            android:textSize="14dp" />
-
-
-        <TextView
-            android:id="@+id/logintext"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="100dp"
-            android:includeFontPadding="false"
-            android:text="@string/login"
-            android:textColor="@color/forgotresidentcode"
-            android:textSize="24dp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

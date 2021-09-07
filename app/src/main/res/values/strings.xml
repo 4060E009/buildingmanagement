@@ -15,8 +15,7 @@
     <string name="Policy"><u>隱私權政策</u></string>
     <string name="policy">隱私權政策</string>
     <string name="forgotresidentcode">忘記住戶代碼</string>
-    <string name="forgot">若您的 iPad 住戶代碼遺忘，請洽詢</string>
-    <string name="forgot1">社區管理中心協助設定</string>
+    <string name="forgot">若您的 iPad 住戶代碼遺忘，請洽詢"\n"社區管理中心協助設定</string>
     <string name="loading1">正在載入...</string>
     <string name="homeinfo">住戶資訊</string>
     <string name="homeedit">請輸入您的真實姓名</string>
