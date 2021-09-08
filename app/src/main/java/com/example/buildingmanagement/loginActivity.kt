@@ -30,17 +30,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.login_landing.*
 import org.json.JSONArray
 import android.view.MotionEvent
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.widget.TextView
-
-import android.widget.TextView.OnEditorActionListener
-
-
-
-
-
-
 
 
 val displayMetrics = DisplayMetrics()

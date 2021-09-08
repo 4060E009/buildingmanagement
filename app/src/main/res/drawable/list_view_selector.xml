@@ -10,6 +10,8 @@
 
     <item android:state_selected="true" android:color="#6296FE" /> <!-- pressed -->
 
+    <item android:state_selected="false" android:color="#3F414B" /> <!-- pressed -->
+
 
 
     <item android:color="#3F414B" /> <!--default-->

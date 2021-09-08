@@ -16,8 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-
         <ImageButton
             android:id="@+id/returnBtn"
             android:onClick="backLoginLanding"
@@ -96,6 +94,7 @@
             android:id="@+id/textview3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_above="@id/landingbutton3"
             android:layout_below="@id/landingedit"
             android:layout_marginLeft="300dp"
             android:layout_marginRight="15dp"
@@ -104,7 +103,6 @@
             android:onClick="forgot"
             android:text="@string/logintext"
             android:textColor="@color/loading"
-            android:layout_above="@id/landingbutton3"
             android:textSize="14dp" />
 
         <Button
