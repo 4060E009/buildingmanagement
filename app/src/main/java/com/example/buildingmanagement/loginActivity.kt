@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -17,9 +17,7 @@ import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.Gravity
-import android.view.View
-import android.view.WindowManager
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -27,10 +25,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.buildingmanagement.HttpApi.HttpApi
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.homeinfo.*
 import kotlinx.android.synthetic.main.login_landing.*
+import kotlinx.android.synthetic.main.privacypolicy1.*
 import org.json.JSONArray
-import android.view.MotionEvent
-import android.widget.TextView
 
 
 val displayMetrics = DisplayMetrics()
@@ -60,84 +58,35 @@ class loginActivity : AppCompatActivity() {
 
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (intent.hasExtra("reload")) {
-            setTheme(R.style.Theme_NoActionBar)
-        }
         super.onCreate(savedInstanceState)
-        val handler = Handler()
-        if (!intent.hasExtra("reload")) {
-            setContentView(R.layout.login_loading)
-            handler.postDelayed({
-                initLandingPage()
-
-            }, 3000)
-        } else {
-            setContentView(R.layout.activity_login)
-            // set status bar
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 4.4
-                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // 5.0
-                val window = window
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) // 確認取消半透明設置。
-                window.decorView.systemUiVisibility =
-                    (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN // 全螢幕顯示，status bar 不隱藏，activity 上方 layout 會被 status bar 覆蓋。
-                            or View.SYSTEM_UI_FLAG_LAYOUT_STABLE) // 配合其他 flag 使用，防止 system bar 改變後 layout 的變動。
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS) // 跟系統表示要渲染 system bar 背景。
-                window.statusBarColor = Color.WHITE
-            }
-
-            landingedit.addTextChangedListener(object : TextWatcher {
-                @SuppressLint("ResourceAsColor")
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                    landingbutton3.setBackgroundResource(R.drawable.enable_btn)
-                    landingbutton3.setTextColor(resources.getColor(R.color.white))
-                    landingedit.setBackgroundResource(R.drawable.edit_border)
-                    Log.d(TAG, "beforeTextChanged: ")
-                }
-
-                @SuppressLint("ResourceAsColor")
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    if (landingedit.text.isEmpty()){
-                        landingbutton3.setBackgroundResource(R.drawable.shape_circle)
-                        landingbutton3.setTextColor(resources.getColor(R.color.Choosecommunity))
-                        Log.d(TAG, "onTextChanged: ")
-                    }
-                }
-
-                @SuppressLint("ResourceAsColor")
-                override fun afterTextChanged(s: Editable?) {
-                    Log.d(TAG, "afterTextChanged: ")
-                }
-
-            })
+        this.supportActionBar?.hide() //隱藏title
+        setContentView(R.layout.login_loading)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 4.4
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // 5.0
+            val window: Window = window
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) // 確認取消半透明設置。
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN // 全螢幕顯示，status bar 不隱藏，activity 上方 layout 會被 status bar 覆蓋。
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE) // 配合其他 flag 使用，防止 system bar 改變後 layout 的變動。
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS) // 跟系統表示要渲染 system bar 背景。
+            window.statusBarColor = Color.TRANSPARENT
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            var flags = window.decorView.systemUiVisibility
+            flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            window.decorView.systemUiVisibility = flags
+        }
+
+        val handler = Handler()
+        handler.postDelayed({
+            initLandingPage()
+        }, 3000)
 
         Log.d(TAG, "onCreate: ${savedInstanceState}")
         Log.d(TAG, "onCreate: hasExtra reload ${intent.hasExtra("reload")}")
-
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            val decor = window.decorView
-//            if (shouldChangeStatusBarTintToDark) {
-//                decor.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-//            } else {
-//                // We want to change tint color to white again.
-//                // You can also record the flags in advance so that you can turn UI back completely if
-//                // you have set other flags before, such as translucent or full screen.
-//                decor.systemUiVisibility = 0
-//            }
-//        }
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            window.getDecorView().setSystemUiVisibility(
-//                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                        or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR // 表示我們的 UI 是 LIGHT 的 style，icon 就會呈現深色系。
-//            )
-//        }
 
         getDeviceWH() // initialize get device width and height
 
@@ -158,8 +107,9 @@ class loginActivity : AppCompatActivity() {
 //                 it.address
 //             }
 //        }
-    }
 
+
+    }
 
     fun initLandingPage() {
         setContentView(R.layout.login_landing)
@@ -167,41 +117,27 @@ class loginActivity : AppCompatActivity() {
         (textview.layoutParams as RelativeLayout.LayoutParams).apply {
             topMargin = (heightPixels * 0.041).toInt()
             bottomMargin = (heightPixels * 0.016).toInt()
+            textview.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
+
         }
         (textview1.layoutParams as RelativeLayout.LayoutParams).apply {
             topMargin = (heightPixels * 0.041).toInt()
             bottomMargin = (heightPixels * 0.016).toInt()
+            textview1.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Bold.otf")
         }
         (textview2.layoutParams as RelativeLayout.LayoutParams).apply {
             bottomMargin = (heightPixels * 0.063).toInt()
+            textview2.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
         }
         (landingbutton.layoutParams as RelativeLayout.LayoutParams).apply {
             height = (heightPixels * 0.069).toInt()
             bottomMargin = (heightPixels * 0.056).toInt()
+            landingbutton.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
         }
     }
 
     fun loginbtn(view: View){
-        if (!intent.hasExtra("reload")) {
-            intent.putExtra("reload", true)
-            finish()
-            startActivity(intent)
-        } else {
-            setContentView(R.layout.activity_login)
-            // set status bar
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 4.4
-                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // 5.0
-                val window = window
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) // 確認取消半透明設置。
-                window.decorView.systemUiVisibility =
-                    (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN // 全螢幕顯示，status bar 不隱藏，activity 上方 layout 會被 status bar 覆蓋。
-                            or View.SYSTEM_UI_FLAG_LAYOUT_STABLE) // 配合其他 flag 使用，防止 system bar 改變後 layout 的變動。
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS) // 跟系統表示要渲染 system bar 背景。
-                window.statusBarColor = Color.WHITE
-            }
+        setContentView(R.layout.activity_login)
 
             landingedit.addTextChangedListener(object : TextWatcher {
                 @SuppressLint("ResourceAsColor")
@@ -229,9 +165,6 @@ class loginActivity : AppCompatActivity() {
             })
         }
 
-
-    }
-
     @SuppressLint("ResourceAsColor", "ResourceType")
     fun openDialog(view: View) {
         alertDialog = AlertDialog.Builder(this)
@@ -243,17 +176,17 @@ class loginActivity : AppCompatActivity() {
         listView.setOnItemClickListener { parent, view, position, id ->
             listView.setItemChecked(position, true)
             spinner.text = array[position]
-            spinner.setTextColor(R.color.forgotresidentcode)
+            spinner.setTextColor(resources.getColor(R.color.forgotresidentcode))
             view.setBackgroundResource(R.drawable.list_view)
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = true
         }
 
-
         // title
         var title = TextView(this)
         title.text = "選擇社區"
         title.setTextColor(resources.getColor(R.color.forgotresidentcode))
+        title.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
         title.textSize = 20F
 
         alertDialog.setCustomTitle(title)
@@ -269,6 +202,8 @@ class loginActivity : AppCompatActivity() {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.Choosecommunity)))     //確定
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))     //取消
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
 
     }
 
@@ -289,23 +224,23 @@ class loginActivity : AppCompatActivity() {
         // title
         var title = TextView(this)
         title.text = "住戶代碼不存在"
-        title.setTextColor(R.color.forgotresidentcode)
+        title.setTextColor(resources.getColor(R.color.forgotresidentcode))
         title.textSize = 16F
+        title.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
 
         alertDialog.setCustomTitle(title)
 
         //message
         var message = SpannableString("請確認您輸入的 iPad 住戶代碼正確無誤，再試一次吧！")
-            message.setSpan(ForegroundColorSpan(R.color.Choosecommunity),0,message.length,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-
+            message.setSpan(ForegroundColorSpan(resources.getColor(R.color.Choosecommunity)),0,message.length,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         alertDialog.setMessage(message)
-
+        
         dialog = alertDialog.create()
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
         dialog.show()
         dialog.window?.setLayout((widthPixels*0.778).toInt(), (heightPixels*0.281).toInt())
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))
-
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
     }
 
     //住戶代碼已被其他裝置綁定
@@ -317,14 +252,15 @@ class loginActivity : AppCompatActivity() {
         // title
         var title = TextView(this)
         title.text = "住戶代碼已被其他裝置綁定"
-        title.setTextColor(R.color.forgotresidentcode)
+        title.setTextColor(resources.getColor(R.color.forgotresidentcode))
+        title.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
         title.textSize = 16F
 
         alertDialog.setCustomTitle(title)
 
         //message
         var message = SpannableString("若您需要更換新的裝置，請洽詢社區管理中心協助解除綁定，並重新登入即可繼續此服務。")
-        message.setSpan(ForegroundColorSpan(R.color.Choosecommunity),0,message.length,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        message.setSpan(ForegroundColorSpan(resources.getColor(R.color.Choosecommunity)),0,message.length,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         alertDialog.setMessage(message)
 
@@ -333,11 +269,13 @@ class loginActivity : AppCompatActivity() {
         dialog.show()
         dialog.window?.setLayout((widthPixels*0.778).toInt(), (heightPixels*0.313).toInt())
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
 
     }
 
 
     fun forgot(view: View){
+        textview3.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
         setContentView(R.layout.forgotresidentcode)
     }
 
@@ -351,6 +289,7 @@ class loginActivity : AppCompatActivity() {
     @SuppressLint("ResourceAsColor")
     fun landingClick(view: View) {
         val button = findViewById<Button>(R.id.landingbutton)
+//        button.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
 
         if (landingedit.text.isNullOrEmpty()) {
             landingedit.setBackgroundResource(R.drawable.error_border)
@@ -369,6 +308,8 @@ class loginActivity : AppCompatActivity() {
         widthPixels = displayMetrics.widthPixels
         heightPixels = displayMetrics.heightPixels
 
+
+
 //        Log.d(TAG, "getDeviceWH: width " + displayMetrics.widthPixels)
 //        Log.d(TAG, "getDeviceWH: height " + displayMetrics.heightPixels)
     }
@@ -385,10 +326,10 @@ class loginActivity : AppCompatActivity() {
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         if (event.action == MotionEvent.ACTION_DOWN) {
-            if (this@loginActivity.getCurrentFocus() != null) {
-                if (this@loginActivity.getCurrentFocus()!!.getWindowToken() != null) {
+            if (this@loginActivity.currentFocus != null) {
+                if (this@loginActivity.currentFocus!!.windowToken != null) {
                     imm.hideSoftInputFromWindow(
-                        this@loginActivity.getCurrentFocus()!!.getWindowToken(),
+                        this@loginActivity.currentFocus!!.windowToken,
                         InputMethodManager.HIDE_NOT_ALWAYS
                     )
                 }
@@ -398,6 +339,7 @@ class loginActivity : AppCompatActivity() {
     }
 
 }
+
 
 
 

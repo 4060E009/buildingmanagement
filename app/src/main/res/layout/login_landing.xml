@@ -16,7 +16,8 @@
             android:id="@+id/imageview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@drawable/icon_android_cms_landing" />
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_android_cms_landing" />
 
         <TextView
             android:id="@+id/textview"
@@ -38,7 +39,7 @@
             android:textColor="@color/white"
             android:layout_above="@id/textview2"
             android:gravity="right|center_vertical"
-            android:layout_marginRight="65dp" />
+            android:layout_marginRight="55dp" />
 
 
         <TextView
@@ -65,7 +66,6 @@
             android:text="@string/loadingbutton"
             android:textColor="@color/loading"
             android:textSize="14dp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
