@@ -48,7 +48,6 @@
             android:text="@string/login"
             android:textColor="@color/forgotresidentcode"
             android:textSize="24dp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

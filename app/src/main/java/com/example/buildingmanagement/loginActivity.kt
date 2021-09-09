@@ -17,6 +17,7 @@ import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.util.DisplayMetrics
 import android.util.Log
+import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
@@ -75,11 +76,11 @@ class loginActivity : AppCompatActivity() {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            FullScreencall()
             var flags = window.decorView.systemUiVisibility
             flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
             window.decorView.systemUiVisibility = flags
         }
-
         val handler = Handler()
         handler.postDelayed({
             initLandingPage()
@@ -111,6 +112,19 @@ class loginActivity : AppCompatActivity() {
 
     }
 
+    fun FullScreencall() {
+        if (Build.VERSION.SDK_INT < 19) {
+            val v = this.window.decorView
+            v.systemUiVisibility = View.GONE
+        } else {
+            //for higher api versions.
+            val decorView = window.decorView
+            val uiOptions =
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+            decorView.systemUiVisibility = uiOptions
+        }
+    }
+
     fun initLandingPage() {
         setContentView(R.layout.login_landing)
         imageview.layoutParams.height = (heightPixels * 0.669).toInt()
@@ -120,24 +134,29 @@ class loginActivity : AppCompatActivity() {
             textview.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
 
         }
+        textview.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24f)
         (textview1.layoutParams as RelativeLayout.LayoutParams).apply {
             topMargin = (heightPixels * 0.041).toInt()
             bottomMargin = (heightPixels * 0.016).toInt()
             textview1.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Bold.otf")
         }
+        textview1.setTextSize(TypedValue.COMPLEX_UNIT_DIP,24f)
         (textview2.layoutParams as RelativeLayout.LayoutParams).apply {
             bottomMargin = (heightPixels * 0.063).toInt()
             textview2.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
         }
+        textview2.setTextSize(TypedValue.COMPLEX_UNIT_DIP,14f)
         (landingbutton.layoutParams as RelativeLayout.LayoutParams).apply {
             height = (heightPixels * 0.069).toInt()
             bottomMargin = (heightPixels * 0.056).toInt()
             landingbutton.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
         }
+        landingbutton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,14f)
     }
 
     fun loginbtn(view: View){
         setContentView(R.layout.activity_login)
+        logintext.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
 
             landingedit.addTextChangedListener(object : TextWatcher {
                 @SuppressLint("ResourceAsColor")
@@ -198,7 +217,7 @@ class loginActivity : AppCompatActivity() {
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
         dialog.show()
 
-        dialog.window?.setLayout((widthPixels*0.8).toInt(), (heightPixels*0.674).toInt())
+        dialog.window?.setLayout((widthPixels*0.8).toInt(), (heightPixels*0.316).toInt())
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.Choosecommunity)))     //確定
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))     //取消
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
