@@ -32,3 +32,4 @@ Dialog的Layout我就跳過了,因為都是Login Button的邏輯觸發的,但妳
 
 https://ithelp.ithome.com.tw/articles/10209475?sc=iThelpR
 https://www.cnblogs.com/whycxb/p/9288419.html
+https://blog.csdn.net/keke921231/article/details/116268298
