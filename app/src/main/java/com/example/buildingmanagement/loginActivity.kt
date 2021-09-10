@@ -31,13 +31,7 @@ import kotlinx.android.synthetic.main.login_landing.*
 import kotlinx.android.synthetic.main.privacypolicy1.*
 import org.json.JSONArray
 
-
 val displayMetrics = DisplayMetrics()
-
-//val height = displayMetrics.heightPixels / displayMetrics.density //手機真實高度
-//val width = displayMetrics.widthPixels / displayMetrics.density //手機真實寬度
-
-//val window: Window = dialog.getWindow()
 
 class loginActivity : AppCompatActivity() {
     private val TAG = "loginActivity"
@@ -76,10 +70,10 @@ class loginActivity : AppCompatActivity() {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            FullScreencall()
             var flags = window.decorView.systemUiVisibility
-            flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE
             window.decorView.systemUiVisibility = flags
+            window.statusBarColor = Color.TRANSPARENT
         }
         val handler = Handler()
         handler.postDelayed({
@@ -108,21 +102,6 @@ class loginActivity : AppCompatActivity() {
 //                 it.address
 //             }
 //        }
-
-
-    }
-
-    fun FullScreencall() {
-        if (Build.VERSION.SDK_INT < 19) {
-            val v = this.window.decorView
-            v.systemUiVisibility = View.GONE
-        } else {
-            //for higher api versions.
-            val decorView = window.decorView
-            val uiOptions =
-                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-            decorView.systemUiVisibility = uiOptions
-        }
     }
 
     fun initLandingPage() {
@@ -157,8 +136,12 @@ class loginActivity : AppCompatActivity() {
     fun loginbtn(view: View){
         setContentView(R.layout.activity_login)
         logintext.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
+        textview3.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
+        landingbutton3.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
+        textview4.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
+        textview5.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
 
-            landingedit.addTextChangedListener(object : TextWatcher {
+        landingedit.addTextChangedListener(object : TextWatcher {
                 @SuppressLint("ResourceAsColor")
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                     landingbutton3.setBackgroundResource(R.drawable.enable_btn)
@@ -294,8 +277,8 @@ class loginActivity : AppCompatActivity() {
 
 
     fun forgot(view: View){
-        textview3.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
         setContentView(R.layout.forgotresidentcode)
+        textview7.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
     }
 
     fun privacypolicy(view: View){
@@ -356,7 +339,6 @@ class loginActivity : AppCompatActivity() {
         }
         return super.onTouchEvent(event)
     }
-
 }
 
 
