@@ -29,3 +29,5 @@
 我燒錄到實機上跟設計師的版Review,上面的問題大部分都是Layout
 Dialog的Layout我就跳過了,因為都是Login Button的邏輯觸發的,但妳還沒寫
 先把上面的問題都解掉,再寫Login Button的邏輯
+
+https://ithelp.ithome.com.tw/articles/10209475?sc=iThelpR
