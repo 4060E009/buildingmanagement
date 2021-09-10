@@ -27,9 +27,11 @@ import com.example.buildingmanagement.HttpApi.HttpApi
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.homeinfo.*
+import kotlinx.android.synthetic.main.listview_item.*
 import kotlinx.android.synthetic.main.login_landing.*
 import kotlinx.android.synthetic.main.privacypolicy1.*
 import org.json.JSONArray
+
 
 val displayMetrics = DisplayMetrics()
 
@@ -46,16 +48,18 @@ class loginActivity : AppCompatActivity() {
     lateinit var alertDialog: AlertDialog.Builder
     lateinit var dialog: AlertDialog
 
-//    val array = arrayListOf("社區1", "社區2", "社區3", "社區4", "社區5", "社區6", "社區7", "社區8", "社區9", "社區10",
-//        "社區11", "社區12", "社區13", "社區14", "社區15" )
+    val array = arrayListOf("社區1", "社區2", "社區3", "社區4", "社區5", "社區6", "社區7", "社區8", "社區9", "社區10",
+        "社區11", "社區12", "社區13", "社區14", "社區15" )
 
-    var array: ArrayList<String> = arrayListOf()
+//    var array: ArrayList<String> = arrayListOf()
+
 
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.supportActionBar?.hide() //隱藏title
         setContentView(R.layout.login_loading)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 4.4
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         }
@@ -102,6 +106,8 @@ class loginActivity : AppCompatActivity() {
 //                 it.address
 //             }
 //        }
+
+
     }
 
     fun initLandingPage() {
@@ -110,31 +116,51 @@ class loginActivity : AppCompatActivity() {
         (textview.layoutParams as RelativeLayout.LayoutParams).apply {
             topMargin = (heightPixels * 0.041).toInt()
             bottomMargin = (heightPixels * 0.016).toInt()
-            textview.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
 
         }
+        textview.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
         textview.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 24f)
         (textview1.layoutParams as RelativeLayout.LayoutParams).apply {
             topMargin = (heightPixels * 0.041).toInt()
             bottomMargin = (heightPixels * 0.016).toInt()
-            textview1.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Bold.otf")
         }
+        textview1.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Bold.otf")
         textview1.setTextSize(TypedValue.COMPLEX_UNIT_DIP,24f)
         (textview2.layoutParams as RelativeLayout.LayoutParams).apply {
             bottomMargin = (heightPixels * 0.063).toInt()
-            textview2.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
         }
+        textview2.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
         textview2.setTextSize(TypedValue.COMPLEX_UNIT_DIP,14f)
         (landingbutton.layoutParams as RelativeLayout.LayoutParams).apply {
             height = (heightPixels * 0.069).toInt()
             bottomMargin = (heightPixels * 0.056).toInt()
-            landingbutton.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
         }
+        landingbutton.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
         landingbutton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,14f)
     }
 
     fun loginbtn(view: View){
         setContentView(R.layout.activity_login)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 4.4
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // 5.0
+            val window: Window = window
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) // 確認取消半透明設置。
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN // 全螢幕顯示，status bar 不隱藏，activity 上方 layout 會被 status bar 覆蓋。
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE) // 配合其他 flag 使用，防止 system bar 改變後 layout 的變動。
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS) // 跟系統表示要渲染 system bar 背景。
+            window.statusBarColor = Color.TRANSPARENT
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            var flags = window.decorView.systemUiVisibility
+            flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE
+            window.decorView.systemUiVisibility = flags
+            window.statusBarColor = Color.TRANSPARENT
+        }
+
         logintext.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
         textview3.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
         landingbutton3.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
@@ -163,7 +189,6 @@ class loginActivity : AppCompatActivity() {
                 override fun afterTextChanged(s: Editable?) {
                     Log.d(TAG, "afterTextChanged: ")
                 }
-
             })
         }
 
@@ -200,7 +225,7 @@ class loginActivity : AppCompatActivity() {
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
         dialog.show()
 
-        dialog.window?.setLayout((widthPixels*0.8).toInt(), (heightPixels*0.316).toInt())
+        dialog.window?.setLayout((widthPixels*0.8).toInt(), (heightPixels*0.674).toInt())
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.Choosecommunity)))     //確定
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))     //取消
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
@@ -282,9 +307,10 @@ class loginActivity : AppCompatActivity() {
     }
 
     fun privacypolicy(view: View){
+//        privacy.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
         setContentView(R.layout.privacypolicy)
         val handler = Handler()
-        handler.postDelayed({setContentView(R.layout.privacypolicy1)}, 1000)
+        handler.postDelayed({setContentView(R.layout.privacypolicy1)}, 2000)
     }
 
     // login and start MainActivity
@@ -302,6 +328,7 @@ class loginActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
+
     }
 
     // get device width and height

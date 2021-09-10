@@ -49,7 +49,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private var listener = object : BottomNavigationView.OnNavigationItemSelectedListener {
         //設定navigationBar裡的item們的點擊事件 被點擊後採動態載入fragment的方式
         override fun onNavigationItemSelected(item : MenuItem): Boolean {

@@ -18,7 +18,9 @@
         android:theme="@style/Theme.BuildingManagement">
         <activity
             android:name=".loginActivity"
-            android:theme="@style/Theme.NoActionBar">
+            android:theme="@style/Theme.NoActionBar"
+            android:imeOptions="flagNoExtractUi"
+            android:windowSoftInputMode="stateVisible|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
