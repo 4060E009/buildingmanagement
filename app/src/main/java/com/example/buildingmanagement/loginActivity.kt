@@ -67,8 +67,8 @@ class loginActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // 5.0
             val window: Window = window
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) // 確認取消半透明設置。
-            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN // 全螢幕顯示，status bar 不隱藏，activity 上方 layout 會被 status bar 覆蓋。
-                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE) // 配合其他 flag 使用，防止 system bar 改變後 layout 的變動。
+            window.decorView.systemUiVisibility = (// 全螢幕顯示，status bar 不隱藏，activity 上方 layout 會被 status bar 覆蓋。
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE) // 配合其他 flag 使用，防止 system bar 改變後 layout 的變動。
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS) // 跟系統表示要渲染 system bar 背景。
             window.statusBarColor = Color.TRANSPARENT
         }
@@ -148,8 +148,8 @@ class loginActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // 5.0
             val window: Window = window
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) // 確認取消半透明設置。
-            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN // 全螢幕顯示，status bar 不隱藏，activity 上方 layout 會被 status bar 覆蓋。
-                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE) // 配合其他 flag 使用，防止 system bar 改變後 layout 的變動。
+//            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN // 全螢幕顯示，status bar 不隱藏，activity 上方 layout 會被 status bar 覆蓋。
+//                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE) // 配合其他 flag 使用，防止 system bar 改變後 layout 的變動。
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS) // 跟系統表示要渲染 system bar 背景。
             window.statusBarColor = Color.TRANSPARENT
         }
@@ -167,20 +167,25 @@ class loginActivity : AppCompatActivity() {
         textview4.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
         textview5.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
 
+        landingbutton3.isEnabled = false
         landingedit.addTextChangedListener(object : TextWatcher {
                 @SuppressLint("ResourceAsColor")
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                    landingbutton3.setBackgroundResource(R.drawable.enable_btn)
-                    landingbutton3.setTextColor(resources.getColor(R.color.white))
+//                    if (spinner.text.isNotEmpty() && landingedit.text.isNotEmpty()) {
+//                        landingbutton3.isEnabled = true
+//                        landingbutton3.setBackgroundResource(R.drawable.enable_btn)
+//                        landingbutton3.setTextColor(resources.getColor(R.color.white))
+//                    }
                     landingedit.setBackgroundResource(R.drawable.edit_border)
                     Log.d(TAG, "beforeTextChanged: ")
                 }
 
                 @SuppressLint("ResourceAsColor")
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    if (landingedit.text.isEmpty()){
-                        landingbutton3.setBackgroundResource(R.drawable.shape_circle)
-                        landingbutton3.setTextColor(resources.getColor(R.color.Choosecommunity))
+                    if (landingedit.text.isEmpty() || spinner.text.isNullOrEmpty()){
+//                        landingbutton3.isEnabled = false
+//                        landingbutton3.setBackgroundResource(R.drawable.shape_circle)
+//                        landingbutton3.setTextColor(resources.getColor(R.color.Choosecommunity))
                         Log.d(TAG, "onTextChanged: ")
                     }
                 }
@@ -188,8 +193,26 @@ class loginActivity : AppCompatActivity() {
                 @SuppressLint("ResourceAsColor")
                 override fun afterTextChanged(s: Editable?) {
                     Log.d(TAG, "afterTextChanged: ")
+                    if (landingedit.text.isNullOrEmpty() || spinner.text.isNullOrEmpty()) {
+                        landingbutton3.isEnabled = false
+                        landingbutton3.setBackgroundResource(R.drawable.shape_circle)
+                        landingbutton3.setTextColor(resources.getColor(R.color.Choosecommunity))
+                    } else {
+                        landingbutton3.isEnabled = true
+                        landingbutton3.setBackgroundResource(R.drawable.enable_btn)
+                        landingbutton3.setTextColor(resources.getColor(R.color.white))
+                    }
                 }
             })
+            // activity_login.xml spinner and EditText setting width and height
+            (spinner.layoutParams as RelativeLayout.LayoutParams).apply {
+                height = (heightPixels * 0.069).toInt()
+                width = (widthPixels * 0.919).toInt()
+            }
+            (landingedit.layoutParams as RelativeLayout.LayoutParams).apply {
+                height = (heightPixels * 0.069).toInt()
+                width = (widthPixels * 0.919).toInt()
+            }
         }
 
     @SuppressLint("ResourceAsColor", "ResourceType")
@@ -201,7 +224,8 @@ class loginActivity : AppCompatActivity() {
         adapter = ArrayAdapter(this, R.layout.listview_item, array)
         listView.adapter = adapter
         listView.setOnItemClickListener { parent, view, position, id ->
-            listView.setItemChecked(position, true)
+//            listView.setItemChecked(position, true)
+            listView.setSelection(position)
             spinner.text = array[position]
             spinner.setTextColor(resources.getColor(R.color.forgotresidentcode))
             view.setBackgroundResource(R.drawable.list_view)
@@ -225,8 +249,13 @@ class loginActivity : AppCompatActivity() {
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
         dialog.show()
 
-        dialog.window?.setLayout((widthPixels*0.8).toInt(), (heightPixels*0.674).toInt())
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.Choosecommunity)))     //確定
+        // dialog height
+        if (array.size > 8) {
+            dialog.window?.setLayout((widthPixels*0.8).toInt(), (heightPixels*0.674).toInt())
+        } else {
+            dialog.window?.setLayout((widthPixels*0.8).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
+        }
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.confirm)))     //確定
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))     //取消
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
@@ -240,6 +269,10 @@ class loginActivity : AppCompatActivity() {
 //        spinner.setTextColor(resources.getColor(R.color.Choosecommunity))
         spinner.setTextColor(Color.parseColor(resources.getString(R.color.Choosecommunity)))
         dialog.dismiss()
+        // disable button
+        landingbutton3.isEnabled = false
+        landingbutton3.setBackgroundResource(R.drawable.shape_circle)
+        landingbutton3.setTextColor(resources.getColor(R.color.Choosecommunity))
     }
 
     // 住戶代碼不存在
@@ -319,7 +352,7 @@ class loginActivity : AppCompatActivity() {
         val button = findViewById<Button>(R.id.landingbutton)
 //        button.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
 
-        if (landingedit.text.isNullOrEmpty()) {
+        if (landingedit.text.isNullOrEmpty() && landingbutton3.text.isNullOrEmpty()) {
             landingedit.setBackgroundResource(R.drawable.error_border)
             userCodeErrorDialog()
         } else {
