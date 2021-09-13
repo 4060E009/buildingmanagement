@@ -23,7 +23,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.marginBottom
 import com.example.buildingmanagement.HttpApi.HttpApi
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -65,16 +64,16 @@ class loginActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 4.4
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         }
-
+//
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // 5.0
             val window: Window = window
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) // 確認取消半透明設置。
-//            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN// 全螢幕顯示，status bar 不隱藏，activity 上方 layout 會被 status bar 覆蓋。
-//                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE) // 配合其他 flag 使用，防止 system bar 改變後 layout 的變動。
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN// 全螢幕顯示，status bar 不隱藏，activity 上方 layout 會被 status bar 覆蓋。
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE) // 配合其他 flag 使用，防止 system bar 改變後 layout 的變動。
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS) // 跟系統表示要渲染 system bar 背景。
             window.statusBarColor = Color.TRANSPARENT
         }
-
+//
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             var flags = window.decorView.systemUiVisibility
             flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE
@@ -150,6 +149,10 @@ class loginActivity : AppCompatActivity() {
 
     fun loginbtn(view: View){
         setContentView(R.layout.activity_login)
+
+        val androidBug5497Workaround = AndroidBug5497Workaround()
+        androidBug5497Workaround.assistActivity(this)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 4.4
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         }
@@ -228,7 +231,6 @@ class loginActivity : AppCompatActivity() {
         alertDialog = AlertDialog.Builder(this)
         val rowList: View = layoutInflater.inflate(R.layout.my_dialog, container,false)
         listView = rowList.findViewById(R.id.listView)
-
         adapter = ArrayAdapter(this, R.layout.listview_item, array)
         listView.adapter = adapter
         listView.setOnItemClickListener { parent, view, position, id ->
@@ -264,6 +266,22 @@ class loginActivity : AppCompatActivity() {
         alertDialog.setView(rowList)
         dialog = alertDialog.create()
         dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
+
+        //跳出dialog時隱藏底部導航欄
+//        window.decorView.setOnSystemUiVisibilityChangeListener {
+//            var uiOptions =   //佈局位於狀態列下方
+////                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or  //全屏
+//                    View.SYSTEM_UI_FLAG_FULLSCREEN or  //隱藏導航欄
+//                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+//                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//            uiOptions = if (Build.VERSION.SDK_INT >= 19) {
+//                uiOptions or 0x00001000
+//            } else {
+//                uiOptions or View.SYSTEM_UI_FLAG_LOW_PROFILE
+//            }
+//            window.decorView.systemUiVisibility = uiOptions
+//        }
+
         dialog.show()
 
         // dialog height
@@ -286,6 +304,7 @@ class loginActivity : AppCompatActivity() {
         spinner.setTextColor(Color.parseColor(resources.getString(R.color.Choosecommunity)))
         selectname = ""
         dialog.dismiss()
+
         // disable button
         landingbutton3.isEnabled = false
         landingbutton3.setBackgroundResource(R.drawable.shape_circle)
