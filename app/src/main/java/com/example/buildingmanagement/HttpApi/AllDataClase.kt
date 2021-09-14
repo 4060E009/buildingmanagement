@@ -1,6 +1,6 @@
 package com.example.buildingmanagement.HttpApi
 
-data class BindUserDat(
+data class BindUserData(
     val houseNumber : String,
     val address : String,
     val floor : String,

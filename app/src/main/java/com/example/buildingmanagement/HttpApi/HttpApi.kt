@@ -69,7 +69,7 @@ class HttpApi {
                 mlistener._onError?.invoke()
             }
 
-            lateinit var bindUserDat: BindUserDat
+            lateinit var bindUserData: BindUserData
             override fun onResponse(call: Call, response: Response) {
                 val responseStr = response.body()?.string()
 
@@ -77,7 +77,7 @@ class HttpApi {
                     mlistener._onError?.invoke()
                 }else{
                     val itemList = JSONObject(responseStr)
-                    bindUserDat = BindUserDat(
+                    bindUserData = BindUserData(
                         houseNumber = itemList.getString("houseNumber"),
                         address = itemList.getString("address"),
                         floor = itemList.getString("floor"),

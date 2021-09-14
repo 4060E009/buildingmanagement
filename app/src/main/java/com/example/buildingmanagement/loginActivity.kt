@@ -15,6 +15,7 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
@@ -24,6 +25,7 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import com.example.buildingmanagement.HttpApi.BindUserData
 import com.example.buildingmanagement.HttpApi.HttpApi
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -51,12 +53,15 @@ class loginActivity : AppCompatActivity() {
     lateinit var alertDialog: AlertDialog.Builder
     lateinit var dialog: AlertDialog
 
+    // 社區名稱
     var selectname: String = ""
+    // 住戶代碼
+    var usercode: String = ""
 
-    val array = arrayListOf("社區1", "社區2", "社區3", "社區4", "社區5", "社區6", "社區7", "社區8", "社區9", "社區10",
-        "社區11", "社區12", "社區13", "社區14", "社區15" )
+//    val array = arrayListOf("社區1", "社區2", "社區3", "社區4", "社區5", "社區6", "社區7", "社區8", "社區9", "社區10",
+//        "社區11", "社區12", "社區13", "社區14", "社區15" )
 
-//    var array: ArrayList<String> = arrayListOf()
+    var array: ArrayList<String> = arrayListOf()
 
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,10 +111,9 @@ class loginActivity : AppCompatActivity() {
         }
 
 //        httpApi.BindUserData("1", "2", "3") {
-//             onSuccess {
-//                 it as BindUserDat
-//                 it.address
-//             }
+//            onSuccess {
+//                Log.d(TAG, "httpApi BindUserData ${it}")
+//            }
 //        }
     }
 
@@ -184,11 +188,9 @@ class loginActivity : AppCompatActivity() {
         textview4.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
         textview5.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
 
-        landingbutton3.isEnabled = false
         landingedit.addTextChangedListener(object : TextWatcher {
                 @SuppressLint("ResourceAsColor")
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
                     landingedit.setBackgroundResource(R.drawable.edit_border)
                     Log.d(TAG, "beforeTextChanged: ")
                 }
@@ -203,13 +205,13 @@ class loginActivity : AppCompatActivity() {
 
                 @SuppressLint("ResourceAsColor")
                 override fun afterTextChanged(s: Editable?) {
-                    Log.d(TAG, "afterTextChanged: ")
-                    if (landingedit.text.isNullOrEmpty() || selectname.isNullOrEmpty()) {
-                        landingbutton3.isEnabled = false
+                    usercode = landingedit.text.toString()
+                    Log.d(TAG, "afterTextChanged: ${landingedit.text.toString()}")
+                    Log.d(TAG, "afterTextChanged: ${usercode}")
+                    if (usercode.isNullOrEmpty() || selectname.isNullOrEmpty()) {
                         landingbutton3.setBackgroundResource(R.drawable.shape_circle)
                         landingbutton3.setTextColor(resources.getColor(R.color.Choosecommunity))
                     } else {
-                        landingbutton3.isEnabled = true
                         landingbutton3.setBackgroundResource(R.drawable.enable_btn)
                         landingbutton3.setTextColor(resources.getColor(R.color.white))
                     }
@@ -244,11 +246,9 @@ class loginActivity : AppCompatActivity() {
             spinner.text = array[position]
             selectname = array[position]
             if (landingedit.text.isNullOrEmpty() || selectname.isNullOrEmpty()) {
-                landingbutton3.isEnabled = false
                 landingbutton3.setBackgroundResource(R.drawable.shape_circle)
                 landingbutton3.setTextColor(resources.getColor(R.color.Choosecommunity))
             } else {
-                landingbutton3.isEnabled = true
                 landingbutton3.setBackgroundResource(R.drawable.enable_btn)
                 landingbutton3.setTextColor(resources.getColor(R.color.white))
             }
@@ -292,67 +292,46 @@ class loginActivity : AppCompatActivity() {
         dialog.dismiss()
 
         // disable button
-        landingbutton3.isEnabled = false
         landingbutton3.setBackgroundResource(R.drawable.shape_circle)
         landingbutton3.setTextColor(resources.getColor(R.color.Choosecommunity))
     }
 
-    // 住戶代碼不存在
     @SuppressLint("ResourceType")
-    fun userCodeErrorDialog() {
-        alertDialog = AlertDialog.Builder(this, R.style.MyDialogStyle)
-            .setPositiveButton("好", null)   // listener argument can write some action
-
-        // title
-        var title = TextView(this)
-        title.text = "住戶代碼不存在"
+    fun dialog_box(myTitle:String, myMsg:String) {
+        val factory:LayoutInflater = LayoutInflater.from(this)
+        val messageDialogView:View = factory.inflate(R.layout.messagebox, null)
+        val messageDialog: AlertDialog = AlertDialog.Builder(this).setPositiveButton("好", null).create()
+        val msgHeight: Int = (heightPixels*0.281).toInt()
+        val msgWidth: Int = (widthPixels*0.778).toInt()
+        messageDialog.setView(messageDialogView)
+        var title = messageDialogView.findViewById<TextView>(R.id.title)
+        title.setText(myTitle)
         title.setTextColor(resources.getColor(R.color.forgotresidentcode))
-        title.textSize = 16F
+        title.textSize = 16f
         title.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
+        title.setPadding((msgWidth*0.067).toInt(), (msgHeight*0.038).toInt(), (msgWidth*0.067).toInt(), (msgHeight*0.016).toInt())
 
-        alertDialog.setCustomTitle(title)
+        var msg = messageDialogView.findViewById<TextView>(R.id.msg)
+        msg.setText(myMsg)
+        msg.setPadding((msgWidth*0.067).toInt(), 0, (msgWidth*0.067).toInt(), (msgHeight*0.038).toInt())
+        msg.textSize = 14f
+        msg.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
+        messageDialog.show()
+        messageDialog.window?.setLayout((widthPixels*0.778).toInt(), (heightPixels*0.281).toInt())
+        messageDialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
+        messageDialog.getButton(AlertDialog.BUTTON_POSITIVE).typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
+        messageDialog.getButton(AlertDialog.BUTTON_POSITIVE).textSize = 14f
+        messageDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))     //取消
+    }
 
-        //message
-        var message = SpannableString("請確認您輸入的 iPad 住戶代碼正確無誤，再試一次吧！")
-            message.setSpan(ForegroundColorSpan(resources.getColor(R.color.Choosecommunity)),0,message.length,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        alertDialog.setMessage(message)
-        
-        dialog = alertDialog.create()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
-        dialog.show()
-        dialog.window?.setLayout((widthPixels*0.778).toInt(), (heightPixels*0.281).toInt())
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
+    // 住戶代碼不存在
+    fun userCodeErrorDialog() {
+        dialog_box("住戶代碼不存在", "請確認您輸入的 iPad 住戶代碼正確無誤，再試一次吧！")
     }
 
     //住戶代碼已被其他裝置綁定
-    @SuppressLint("ResourceType")
     fun userCodeUsing(){
-        alertDialog = AlertDialog.Builder(this)
-            .setPositiveButton("好", null)   // listener argument can write some action
-
-        // title
-        var title = TextView(this)
-        title.text = "住戶代碼已被其他裝置綁定"
-        title.setTextColor(resources.getColor(R.color.forgotresidentcode))
-        title.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
-        title.textSize = 16F
-
-        alertDialog.setCustomTitle(title)
-
-        //message
-        var message = SpannableString("若您需要更換新的裝置，請洽詢社區管理中心協助解除綁定，並重新登入即可繼續此服務。")
-        message.setSpan(ForegroundColorSpan(resources.getColor(R.color.Choosecommunity)),0,message.length,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        alertDialog.setMessage(message)
-
-        dialog = alertDialog.create()
-        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
-        dialog.show()
-        dialog.window?.setLayout((widthPixels*0.778).toInt(), (heightPixels*0.313).toInt())
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
-
+        dialog_box("住戶代碼已被其他裝置綁定", "若您需要更換新的裝置，請洽詢社區管理中心協助解除綁定，並重新登入即可繼續此服務。")
     }
 
     fun forgot(view: View) {
@@ -376,10 +355,19 @@ class loginActivity : AppCompatActivity() {
         val button = findViewById<Button>(R.id.landingbutton)
         landingbutton3.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
 
-        if (landingedit.text.isNullOrEmpty() && landingbutton3.text.isNullOrEmpty()) {
+        if (usercode.isNullOrEmpty() || selectname.isNullOrEmpty()) {
             landingedit.setBackgroundResource(R.drawable.error_border)
-            userCodeErrorDialog()
+//            userCodeErrorDialog()
+            userCodeUsing()
         } else {
+//            httpApi.BindUserData("123", "123", "123") {
+//                onSuccess {
+//                    // ...
+//                }
+//                onError {
+//                    userCodeErrorDialog()
+//                }
+//            }
             val intent = Intent(this, MainActivity::class.java).apply {
                 putExtra(AlarmClock.EXTRA_MESSAGE, intent)
             }
@@ -406,6 +394,92 @@ class loginActivity : AppCompatActivity() {
 
     fun close_view(view: View){
         setContentView(R.layout.activity_login)
+        if (selectname.isNotEmpty()) {
+            spinner.text = selectname
+            spinner.setTextColor(resources.getColor(R.color.forgotresidentcode))
+        }
+        if (usercode.isNotEmpty()) {
+            landingedit.setText(usercode)
+        }
+        if (usercode.isNullOrEmpty() || selectname.isNullOrEmpty()) {
+            landingbutton3.setBackgroundResource(R.drawable.shape_circle)
+            landingbutton3.setTextColor(resources.getColor(R.color.Choosecommunity))
+        } else {
+            landingbutton3.setBackgroundResource(R.drawable.enable_btn)
+            landingbutton3.setTextColor(resources.getColor(R.color.white))
+        }
+
+        val androidBug5497Workaround = AndroidBug5497Workaround()
+        androidBug5497Workaround.assistActivity(this)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 4.4
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // 5.0
+            val window: Window = window
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) // 確認取消半透明設置。
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS) // 跟系統表示要渲染 system bar 背景。
+            window.statusBarColor = Color.TRANSPARENT
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            var flags = window.decorView.systemUiVisibility
+            flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            window.decorView.systemUiVisibility = flags
+            window.statusBarColor = Color.TRANSPARENT
+        }
+
+        logintext.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
+        textview3.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
+        landingbutton3.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
+        textview4.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
+        textview5.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
+
+        landingedit.addTextChangedListener(object : TextWatcher {
+            @SuppressLint("ResourceAsColor")
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+                landingedit.setBackgroundResource(R.drawable.edit_border)
+                Log.d(TAG, "beforeTextChanged: ")
+            }
+
+            @SuppressLint("ResourceAsColor")
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (landingedit.text.isEmpty() || spinner.text.isNullOrEmpty()){
+
+                    Log.d(TAG, "onTextChanged: ")
+                }
+            }
+
+            @SuppressLint("ResourceAsColor")
+            override fun afterTextChanged(s: Editable?) {
+                usercode = landingedit.text.toString()
+                Log.d(TAG, "afterTextChanged: ${landingedit.text.toString()}")
+                Log.d(TAG, "afterTextChanged: ${usercode}")
+                if (landingedit.text.isNullOrEmpty() || selectname.isNullOrEmpty()) {
+                    landingbutton3.setBackgroundResource(R.drawable.shape_circle)
+                    landingbutton3.setTextColor(resources.getColor(R.color.Choosecommunity))
+                } else {
+                    landingbutton3.setBackgroundResource(R.drawable.enable_btn)
+                    landingbutton3.setTextColor(resources.getColor(R.color.white))
+                }
+            }
+        })
+        // activity_login.xml spinner and EditText setting width and height
+        (spinner.layoutParams as RelativeLayout.LayoutParams).apply {
+            height = (heightPixels * 0.069).toInt()
+            width = (widthPixels * 0.919).toInt()
+        }
+        (landingedit.layoutParams as RelativeLayout.LayoutParams).apply {
+            height = (heightPixels * 0.069).toInt()
+            width = (widthPixels * 0.919).toInt()
+        }
+        (landingbutton3.layoutParams as LinearLayout.LayoutParams).apply {
+            height = (heightPixels * 0.069).toInt()
+            width = (widthPixels * 0.911).toInt()
+
+        }
     }
 
     //點擊空白處關閉鍵盤
@@ -424,6 +498,7 @@ class loginActivity : AppCompatActivity() {
         return super.onTouchEvent(event)
     }
 }
+
 
 
 
