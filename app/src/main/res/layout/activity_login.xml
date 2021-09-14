@@ -26,9 +26,10 @@
     <RelativeLayout
         android:id="@+id/loginrelative"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="NotSibling"
-        android:layout_height="wrap_content" >
+        tools:layout_editor_absoluteX="0dp">
 
         <TextView
             android:id="@+id/logintext"
@@ -49,8 +50,8 @@
             android:layout_height="60dp"
             android:layout_below="@+id/logintext"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:layout_marginTop="30dp"
+            android:layout_marginRight="15dp"
             android:background="@drawable/shape_text"
             android:onClick="openDialog"
             android:paddingLeft="16dp"
@@ -65,8 +66,8 @@
             android:layout_height="60dp"
             android:layout_below="@id/spinner"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:layout_marginTop="20dp"
+            android:layout_marginRight="15dp"
             android:background="@drawable/edit_border"
             android:cursorVisible="true"
             android:gravity="left|center_vertical"
@@ -88,8 +89,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/landingedit"
             android:layout_marginLeft="280dp"
-            android:layout_marginRight="15dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
             android:gravity="right|center_vertical"
             android:onClick="forgot"
             android:text="@string/logintext"
