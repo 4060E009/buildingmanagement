@@ -230,7 +230,8 @@ class loginActivity : AppCompatActivity() {
         alertDialog = AlertDialog.Builder(this)
         val rowList: View = layoutInflater.inflate(R.layout.my_dialog, container,false)
         listView = rowList.findViewById(R.id.listView)
-        adapter = ArrayAdapter(this, R.layout.listview_item, array)
+//        adapter = ArrayAdapter(this, R.layout.listview_item, array)
+        adapter = MyArrayAdapter(this, R.layout.listview_item, array)
         listView.adapter = adapter
         listView.setOnItemClickListener { parent, view, position, id ->
             listView.setItemChecked(position,true);
