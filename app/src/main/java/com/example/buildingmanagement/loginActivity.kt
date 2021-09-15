@@ -9,6 +9,7 @@ import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.provider.AlarmClock
 import android.text.Editable
 import android.text.SpannableString
@@ -58,6 +59,8 @@ class loginActivity : AppCompatActivity() {
     // 住戶代碼
     var usercode: String = ""
 
+    lateinit var mHandler: Handler
+
 //    val array = arrayListOf("社區1", "社區2", "社區3", "社區4", "社區5", "社區6", "社區7", "社區8", "社區9", "社區10",
 //        "社區11", "社區12", "社區13", "社區14", "社區15" )
 
@@ -68,6 +71,8 @@ class loginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         this.supportActionBar?.hide() //隱藏title
         setContentView(R.layout.login_loading)
+
+        mHandler = Handler()
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 4.4
@@ -128,13 +133,11 @@ class loginActivity : AppCompatActivity() {
         textview1.setTextSize(TypedValue.COMPLEX_UNIT_DIP,24f)
 
         (textview.layoutParams as LinearLayout.LayoutParams).apply {
-//            topMargin = (heightPixels * 0.041).toInt()
             bottomMargin = (heightPixels * 0.056).toInt() - (heightPixels * 0.056).toInt() - (heightPixels * 0.016).toInt()
 
         }
 
         (textview1.layoutParams as LinearLayout.LayoutParams).apply {
-//            topMargin = (heightPixels * 0.041).toInt()
             bottomMargin = (heightPixels * 0.056).toInt() - (heightPixels * 0.056).toInt() - (heightPixels * 0.016).toInt()
         }
 
@@ -152,11 +155,6 @@ class loginActivity : AppCompatActivity() {
         }
         landingbutton.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
         landingbutton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,14f)
-
-//        Log.d( TAG, "initLandingPage: tv_top=${(heightPixels * 0.041).toInt()}" )
-//        Log.d(TAG, "initLandingPage: tv_bottom=${(heightPixels*0.016).toInt()}")
-//        Log.d(TAG, "initLandingPage: tv2_bottom=${(heightPixels*0.063).toInt()}")
-
     }
 
     fun loginbtn(view: View){
@@ -301,30 +299,34 @@ class loginActivity : AppCompatActivity() {
 
     @SuppressLint("ResourceType")
     fun dialog_box(myTitle:String, myMsg:String) {
-        val factory:LayoutInflater = LayoutInflater.from(this)
-        val messageDialogView:View = factory.inflate(R.layout.messagebox, null)
-        val messageDialog: AlertDialog = AlertDialog.Builder(this).setPositiveButton("好", null).create()
-        val msgHeight: Int = (heightPixels*0.281).toInt()
-        val msgWidth: Int = (widthPixels*0.778).toInt()
-        messageDialog.setView(messageDialogView)
-        var title = messageDialogView.findViewById<TextView>(R.id.title)
-        title.setText(myTitle)
-        title.setTextColor(resources.getColor(R.color.forgotresidentcode))
-        title.textSize = 16f
-        title.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
-        title.setPadding((msgWidth*0.067).toInt(), (msgHeight*0.038).toInt(), (msgWidth*0.067).toInt(), (msgHeight*0.016).toInt())
+        mHandler.post(kotlinx.coroutines.Runnable {
+            kotlin.run {
+                val factory:LayoutInflater = LayoutInflater.from(this)
+                val messageDialogView:View = factory.inflate(R.layout.messagebox, null)
+                val messageDialog: AlertDialog = AlertDialog.Builder(this).setPositiveButton("好", null).create()
+                val msgHeight: Int = (heightPixels*0.281).toInt()
+                val msgWidth: Int = (widthPixels*0.778).toInt()
+                messageDialog.setView(messageDialogView)
+                var title = messageDialogView.findViewById<TextView>(R.id.title)
+                title.setText(myTitle)
+                title.setTextColor(resources.getColor(R.color.forgotresidentcode))
+                title.textSize = 16f
+                title.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
+                title.setPadding((msgWidth*0.067).toInt(), (msgHeight*0.038).toInt(), (msgWidth*0.067).toInt(), (msgHeight*0.016).toInt())
 
-        var msg = messageDialogView.findViewById<TextView>(R.id.msg)
-        msg.setText(myMsg)
-        msg.setPadding((msgWidth*0.067).toInt(), 0, (msgWidth*0.067).toInt(), (msgHeight*0.038).toInt())
-        msg.textSize = 14f
-        msg.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
-        messageDialog.show()
-        messageDialog.window?.setLayout((widthPixels*0.778).toInt(), (heightPixels*0.281).toInt())
-        messageDialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
-        messageDialog.getButton(AlertDialog.BUTTON_POSITIVE).typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
-        messageDialog.getButton(AlertDialog.BUTTON_POSITIVE).textSize = 14f
-        messageDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))     //取消
+                var msg = messageDialogView.findViewById<TextView>(R.id.msg)
+                msg.setText(myMsg)
+                msg.setPadding((msgWidth*0.067).toInt(), 0, (msgWidth*0.067).toInt(), (msgHeight*0.038).toInt())
+                msg.textSize = 14f
+                msg.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
+                messageDialog.show()
+                messageDialog.window?.setLayout((widthPixels*0.778).toInt(), (heightPixels*0.281).toInt())
+                messageDialog.window?.setBackgroundDrawableResource(R.drawable.dialog)
+                messageDialog.getButton(AlertDialog.BUTTON_POSITIVE).typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
+                messageDialog.getButton(AlertDialog.BUTTON_POSITIVE).textSize = 14f
+                messageDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))     //取消
+            }
+        })
     }
 
     // 住戶代碼不存在
@@ -357,24 +359,36 @@ class loginActivity : AppCompatActivity() {
     fun landingClick(view: View) {
         val button = findViewById<Button>(R.id.landingbutton)
         landingbutton3.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
+        var enter_main: Boolean = false
 
         if (usercode.isNullOrEmpty() || selectname.isNullOrEmpty()) {
             landingedit.setBackgroundResource(R.drawable.error_border)
             userCodeErrorDialog()
 //            userCodeUsing()
         } else {
+            Log.d(TAG, "selectname : ${selectname}")
+            httpApi.BindUserData(selectname, "2222", "123456789") {
+                onSuccess {
+                    if (it.equals("error")) {
+                        userCodeUsing()
+                    } else if (it.equals("null")) {
+                        userCodeErrorDialog()
+                    } else {
+                        setContentView(R.layout.homeinfo)
+                    }
+                }
+            }
+//            if (enter_main) {
+//                val intent = Intent(this, MainActivity::class.java).apply {
+//                    putExtra(AlarmClock.EXTRA_MESSAGE, intent)
+//                }
+//                startActivity(intent)
+//            }
 //            httpApi.BindUserData("DUCCMS", "2222", "123456789") {
 //                onSuccess {
-//                    // ...
-//                }
-//                onError {
-//                    userCodeErrorDialog()
+//
 //                }
 //            }
-            val intent = Intent(this, MainActivity::class.java).apply {
-                putExtra(AlarmClock.EXTRA_MESSAGE, intent)
-            }
-            startActivity(intent)
         }
 
     }

@@ -1,5 +1,6 @@
 package com.example.buildingmanagement.HttpApi
 
+import android.os.Looper
 import android.util.Log
 import okhttp3.*
 import org.json.JSONArray
@@ -73,8 +74,14 @@ class HttpApi {
             override fun onResponse(call: Call, response: Response) {
                 val responseStr = response.body()?.string()
 
-                if (responseStr == "null" || responseStr == "Error"){
-                    mlistener._onError?.invoke()
+                Log.d(TAG, "onResponse equals error: ${responseStr.equals("Error")}")
+                Log.d(TAG, "onResponse equals null: ${responseStr.equals("NULL")}")
+                Log.d(TAG, "onResponse error: ${responseStr == "Error"}")
+                Log.d(TAG, "onResponse null: ${responseStr == "NULL"}")
+                if (responseStr == "NULL") {
+                    mlistener._onSuccess?.invoke("null")
+                } else if (responseStr == "Error") {
+                    mlistener._onSuccess?.invoke("error")
                 }else{
                     val itemList = JSONObject(responseStr)
                     bindUserData = BindUserData(
