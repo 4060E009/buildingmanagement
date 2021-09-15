@@ -78,7 +78,7 @@ class loginActivity : AppCompatActivity() {
             val window: Window = window
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) // 確認取消半透明設置。
             window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN// 全螢幕顯示，status bar 不隱藏，activity 上方 layout 會被 status bar 覆蓋。
-                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE) // 配合其他 flag 使用，防止 system bar 改變後 layout 的變動。
+                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE ) // 配合其他 flag 使用，防止 system bar 改變後 layout 的變動。
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS) // 跟系統表示要渲染 system bar 背景。
             window.statusBarColor = Color.TRANSPARENT
         }
@@ -110,8 +110,9 @@ class loginActivity : AppCompatActivity() {
             }
         }
 
-//        httpApi.BindUserData("1", "2", "3") {
+//        httpApi.BindUserData("DUCCMS", "2345", "123456789") {
 //            onSuccess {
+//
 //                Log.d(TAG, "httpApi BindUserData ${it}")
 //            }
 //        }
@@ -127,18 +128,18 @@ class loginActivity : AppCompatActivity() {
         textview1.setTextSize(TypedValue.COMPLEX_UNIT_DIP,24f)
 
         (textview.layoutParams as LinearLayout.LayoutParams).apply {
-            topMargin = (heightPixels * 0.041).toInt()
-            bottomMargin = (heightPixels * 0.016).toInt()
+//            topMargin = (heightPixels * 0.041).toInt()
+            bottomMargin = (heightPixels * 0.056).toInt() - (heightPixels * 0.056).toInt() - (heightPixels * 0.016).toInt()
 
         }
 
         (textview1.layoutParams as LinearLayout.LayoutParams).apply {
-            topMargin = (heightPixels * 0.041).toInt()
-            bottomMargin = (heightPixels * 0.016).toInt()
+//            topMargin = (heightPixels * 0.041).toInt()
+            bottomMargin = (heightPixels * 0.056).toInt() - (heightPixels * 0.056).toInt() - (heightPixels * 0.016).toInt()
         }
 
         (textview2.layoutParams as RelativeLayout.LayoutParams).apply {
-            bottomMargin = (heightPixels * 0.063).toInt()
+            bottomMargin = (heightPixels * 0.056).toInt() - (heightPixels * 0.038).toInt() + (heightPixels * 0.025).toInt()
         }
         textview2.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
         textview2.setTextSize(TypedValue.COMPLEX_UNIT_DIP,14f)
@@ -146,15 +147,15 @@ class loginActivity : AppCompatActivity() {
         (landingbutton.layoutParams as RelativeLayout.LayoutParams).apply {
             height = (heightPixels * 0.069).toInt()
             width = (widthPixels * 0.8).toInt()
-            bottomMargin = (heightPixels * 0.056).toInt()
+            bottomMargin = (heightPixels * 0.056).toInt() - (heightPixels * 0.069).toInt() + (heightPixels * 0.056).toInt()
             leftMargin = (widthPixels * 0.1).toInt()
         }
         landingbutton.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
         landingbutton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,14f)
 
-        Log.d( TAG, "initLandingPage: tv_top=${(heightPixels * 0.041).toInt()}" )
-        Log.d(TAG, "initLandingPage: tv_bottom=${(heightPixels*0.016).toInt()}")
-        Log.d(TAG, "initLandingPage: tv2_bottom=${(heightPixels*0.063).toInt()}")
+//        Log.d( TAG, "initLandingPage: tv_top=${(heightPixels * 0.041).toInt()}" )
+//        Log.d(TAG, "initLandingPage: tv_bottom=${(heightPixels*0.016).toInt()}")
+//        Log.d(TAG, "initLandingPage: tv2_bottom=${(heightPixels*0.063).toInt()}")
 
     }
 
@@ -192,6 +193,7 @@ class loginActivity : AppCompatActivity() {
                 @SuppressLint("ResourceAsColor")
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                     landingedit.setBackgroundResource(R.drawable.edit_border)
+                    landingedit.setTextColor(resources.getColor(R.color.forgotresidentcode))
                     Log.d(TAG, "beforeTextChanged: ")
                 }
 
@@ -253,6 +255,7 @@ class loginActivity : AppCompatActivity() {
                 landingbutton3.setTextColor(resources.getColor(R.color.white))
             }
             spinner.setTextColor(resources.getColor(R.color.forgotresidentcode))
+            landingedit.setTextColor(resources.getColor(R.color.forgotresidentcode))
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor(resources.getString(R.color.loading)))
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = true
         }
@@ -346,7 +349,7 @@ class loginActivity : AppCompatActivity() {
         handler.postDelayed({
             setContentView(R.layout.privacypolicy1)
             privacy.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
-        }, 2000)
+        }, 1000)
     }
 
     // login and start MainActivity
@@ -357,10 +360,10 @@ class loginActivity : AppCompatActivity() {
 
         if (usercode.isNullOrEmpty() || selectname.isNullOrEmpty()) {
             landingedit.setBackgroundResource(R.drawable.error_border)
-//            userCodeErrorDialog()
-            userCodeUsing()
+            userCodeErrorDialog()
+//            userCodeUsing()
         } else {
-//            httpApi.BindUserData("123", "123", "123") {
+//            httpApi.BindUserData("DUCCMS", "2345", "123456789") {
 //                onSuccess {
 //                    // ...
 //                }
@@ -400,8 +403,11 @@ class loginActivity : AppCompatActivity() {
         }
         if (usercode.isNotEmpty()) {
             landingedit.setText(usercode)
+            landingedit.setTextColor(resources.getColor(R.color.forgotresidentcode))
+
         }
         if (usercode.isNullOrEmpty() || selectname.isNullOrEmpty()) {
+            landingedit.setTextColor(resources.getColor(R.color.forgotresidentcode))
             landingbutton3.setBackgroundResource(R.drawable.shape_circle)
             landingbutton3.setTextColor(resources.getColor(R.color.Choosecommunity))
         } else {
@@ -439,17 +445,13 @@ class loginActivity : AppCompatActivity() {
         landingedit.addTextChangedListener(object : TextWatcher {
             @SuppressLint("ResourceAsColor")
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
                 landingedit.setBackgroundResource(R.drawable.edit_border)
                 Log.d(TAG, "beforeTextChanged: ")
             }
 
             @SuppressLint("ResourceAsColor")
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (landingedit.text.isEmpty() || spinner.text.isNullOrEmpty()){
-
                     Log.d(TAG, "onTextChanged: ")
-                }
             }
 
             @SuppressLint("ResourceAsColor")

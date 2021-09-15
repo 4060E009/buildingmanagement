@@ -8,7 +8,10 @@ data class BindUserData(
     val residentSerialNumber : String,
     val name : String,
     val gasNumber : String,
-    val points : String
+    val points : String,
+    val publicIP: String,
+    val sipUsername: String,
+    val sipPassword: String
 )
 
 data class GetUserMail(

@@ -85,7 +85,10 @@ class HttpApi {
                         residentSerialNumber = itemList.getString("residentSerialNumber"),
                         name = itemList.getString("name"),
                         gasNumber = itemList.getString("gasNumber"),
-                        points = itemList.getString("points")
+                        points = itemList.getString("points"),
+                        publicIP = itemList.getString("publicIP"),
+                        sipUsername = itemList.getString("sipUsername"),
+                        sipPassword = itemList.getString("sipPassword")
                     )
                     // TODO("response to json object")
                     mlistener._onSuccess?.invoke(itemList)
