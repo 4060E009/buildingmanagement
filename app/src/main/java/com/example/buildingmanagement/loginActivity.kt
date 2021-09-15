@@ -110,7 +110,7 @@ class loginActivity : AppCompatActivity() {
             }
         }
 
-//        httpApi.BindUserData("DUCCMS", "2345", "123456789") {
+//        httpApi.BindUserData("DUCCMS", "2222", "123456789") {
 //            onSuccess {
 //
 //                Log.d(TAG, "httpApi BindUserData ${it}")
@@ -363,7 +363,7 @@ class loginActivity : AppCompatActivity() {
             userCodeErrorDialog()
 //            userCodeUsing()
         } else {
-//            httpApi.BindUserData("DUCCMS", "2345", "123456789") {
+//            httpApi.BindUserData("DUCCMS", "2222", "123456789") {
 //                onSuccess {
 //                    // ...
 //                }
