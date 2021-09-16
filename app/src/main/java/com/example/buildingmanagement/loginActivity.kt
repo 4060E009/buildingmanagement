@@ -30,6 +30,7 @@ import kotlinx.android.synthetic.main.listview_item.*
 import kotlinx.android.synthetic.main.login_landing.*
 import kotlinx.android.synthetic.main.privacypolicy1.*
 import org.json.JSONArray
+import java.io.File
 import kotlin.concurrent.thread
 
 
@@ -93,7 +94,15 @@ class loginActivity : AppCompatActivity() {
         }
         val handler = Handler()
         handler.postDelayed({
-            initLandingPage()
+            if (hasLoginToken()){
+                intent = Intent(this@loginActivity,MainActivity::class.java).apply {
+                    putExtra(AlarmClock.EXTRA_MESSAGE,intent)
+                    startActivity(intent)
+                }
+            }else{
+                initLandingPage()
+
+            }
         }, 3000)
 
         Log.d(TAG, "onCreate: ${savedInstanceState}")
@@ -516,6 +525,10 @@ class loginActivity : AppCompatActivity() {
             }
         }
         return super.onTouchEvent(event)
+    }
+
+    fun hasLoginToken(): Boolean{
+        return File(filesDir.absolutePath, "loginToken.txt").exists()
     }
 }
 

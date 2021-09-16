@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.homeinfo.*
+import java.io.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -31,7 +32,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.supportActionBar?.hide() //隱藏title
-        setContentView(R.layout.homeinfo)
+
+        if (isSave()){
+            setContentView(R.layout.activity_main)
+        }else{
+            setContentView(R.layout.homeinfo)
+            homeEdit()
+        }
 
         val androidBug5497Workaround = AndroidBug5497Workaround()
         androidBug5497Workaround.assistActivity(this)
@@ -43,9 +50,6 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { // 5.0
             val window: Window = window
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS) // 確認取消半透明設置。
-            window.decorView.systemUiVisibility =
-                (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN// 全螢幕顯示，status bar 不隱藏，activity 上方 layout 會被 status bar 覆蓋。
-                        or View.SYSTEM_UI_FLAG_LAYOUT_STABLE) // 配合其他 flag 使用，防止 system bar 改變後 layout 的變動。
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS) // 跟系統表示要渲染 system bar 背景。
             window.statusBarColor = Color.TRANSPARENT
         }
@@ -56,6 +60,14 @@ class MainActivity : AppCompatActivity() {
             window.decorView.systemUiVisibility = flags
             window.statusBarColor = Color.TRANSPARENT
         }
+
+        // if file exist, read file data
+//        if (isSave()) {
+//            homeedit.setText(getName())
+//        }
+    }
+
+    fun homeEdit(){
         homeedit.addTextChangedListener(object : TextWatcher {
             @SuppressLint("ResourceAsColor")
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -65,7 +77,7 @@ class MainActivity : AppCompatActivity() {
 
             @SuppressLint("ResourceAsColor")
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    Log.d(TAG, "onTextChanged: ")
+                Log.d(TAG, "onTextChanged: ")
             }
 
             @SuppressLint("ResourceAsColor")
@@ -74,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                 if (homeedit.text.isNullOrEmpty()) {
                     homeinfobtn.isEnabled = false
                     homeinfobtn.setBackgroundResource(R.drawable.home_null)
-                    homeinfobtn.setTextColor(resources.getColor(R.color.Choosecommunity))
+                    homeinfobtn.setTextColor(resources.getColor(R.color.homeinfobtn))
                 } else {
                     homeinfobtn.isEnabled = true
                     homeinfobtn.setBackgroundResource(R.drawable.home_check)
@@ -82,10 +94,20 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-
     }
 
     fun navigation(view: View){
+        when(view.id) {
+            R.id.homeinfobtn -> {
+                saveName()
+            }
+            R.id.homeinfobtn1 -> {
+                saveName()
+            } else -> {
+                Log.d(TAG, "navigation: else")
+            }
+        }
+
         setContentView(R.layout.activity_main)
 
         supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment).commit()
@@ -111,6 +133,46 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
+    fun isSave(): Boolean{
+        Log.d(TAG, "isSave: ${File(filesDir.absolutePath, "test.txt").exists()}")
+        return File(filesDir.absolutePath, "test.txt").exists()
+    }
+
+    // get text file content
+    private fun getName(): String {
+        try {
+            val inputStream: FileInputStream = this.openFileInput("test.txt")
+            var data = inputStream.readBytes().toString(Charsets.UTF_8)
+            inputStream.close()
+            return data
+            Log.d(TAG, "readName: data is ${data}")
+        } catch (e: FileNotFoundException) {
+            Log.d(TAG, "readName error: file not found")
+            return ""
+        } catch (e: IOException) {
+            Log.d(TAG, "readName error: IO error")
+            return ""
+        }
+   }
+
+    // press save button call this function
+    private fun saveName() {
+        val data = homeedit.text.toString()
+        try {
+            val outStream: FileOutputStream = this.openFileOutput("test.txt", Context.MODE_PRIVATE)
+            outStream.write(data.toByteArray())
+            outStream.close()
+            Log.d(TAG, "save_name: save success")
+        } catch (e: FileNotFoundException) {
+            Log.d(TAG, "save_name error: file not found")
+            return
+        } catch (e: IOException) {
+            Log.d(TAG, "save_name: IO error")
+            return
+        }
+   }
+
     //點擊空白處關閉鍵盤
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

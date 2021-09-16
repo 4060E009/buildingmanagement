@@ -13,4 +13,5 @@
     <color name="buttonbackground">#E0E4EC</color>
     <color name="forgotresidentcode">#3F414B</color>
     <color name="errorborder">#FE8AA8</color>
+    <color name="homeinfobtn">#808A98B4</color>
 </resources>

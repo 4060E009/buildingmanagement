@@ -45,12 +45,17 @@
 
     </RelativeLayout>
 
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toTopOf="parent">
 
-    <ScrollView
+
+    <RelativeLayout
         app:layout_constraintBottom_toTopOf="@id/bottom_relayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/second_scoll">
+        android:id="@+id/second_relayout">
 
         <ImageView
             android:id="@+id/forgot"
@@ -73,10 +78,12 @@
             android:backgroundTint="@color/white"
             android:gravity="left|center_vertical"
             android:hint="@string/homeedit"
+            android:singleLine="true"
             android:paddingLeft="16dp"
             android:textCursorDrawable="@drawable/textcursor"
             android:stateListAnimator="@null"
-            android:textColor="@color/Choosecommunity"
+            android:textColor="@color/forgotresidentcode"
+            android:textColorHint="@color/Choosecommunity"
             android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -94,28 +101,30 @@
             android:layout_marginTop="20dp"
             android:layout_below="@id/homeedit"/>
 
-    </ScrollView>
+    </RelativeLayout>
+
+</ScrollView>
 
     <RelativeLayout
         android:id="@+id/bottom_relayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/second_scoll"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/homeinfobtn"
             android:layout_width="100dp"
             android:layout_height="45dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
             android:layout_marginLeft="280dp"
-            android:background="@drawable/homeinfo"
-            android:backgroundTint="@color/buttonbackground"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/home_null"
             android:onClick="navigation"
             android:stateListAnimator="@null"
             android:text="@string/homeinfobtn"
-            android:textColor="@color/Choosecommunity"
+            android:textColor="@color/homeinfobtn"
+            android:enabled="false"
             android:textSize="14dp" />
 
         <Button
@@ -123,8 +132,8 @@
             android:layout_width="100dp"
             android:layout_height="45dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
             android:layout_marginLeft="170dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/homeinfo"
             android:onClick="navigation"
             android:stateListAnimator="@null"

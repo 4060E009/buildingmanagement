@@ -28,7 +28,7 @@
         <item name="windowActionBar">false</item>
     </style>
 
-    <style name="Theme.NoActionBar" parent="Theme.AppCompat.NoActionBar">
+    <style name="Theme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>

@@ -7,8 +7,6 @@
                 android:color="@color/loading" />
             <corners android:radius="50dp" />
             <solid android:color="@color/loading" />
-
-
         </shape>
     </item>
 </layer-list>
