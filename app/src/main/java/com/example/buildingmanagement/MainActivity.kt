@@ -1,21 +1,22 @@
 package com.example.buildingmanagement
 
-import android.content.Intent
+import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.provider.AlarmClock.EXTRA_MESSAGE
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
-import android.view.MenuItem
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
-import android.widget.Button
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.homeinfo.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,7 +31,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.supportActionBar?.hide() //隱藏title
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.homeinfo)
+
+        val androidBug5497Workaround = AndroidBug5497Workaround()
+        androidBug5497Workaround.assistActivity(this)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) { // 4.4
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
@@ -52,7 +56,37 @@ class MainActivity : AppCompatActivity() {
             window.decorView.systemUiVisibility = flags
             window.statusBarColor = Color.TRANSPARENT
         }
+        homeedit.addTextChangedListener(object : TextWatcher {
+            @SuppressLint("ResourceAsColor")
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                homeedit.setTextColor(resources.getColor(R.color.forgotresidentcode))
+                Log.d(TAG, "beforeTextChanged: ")
+            }
 
+            @SuppressLint("ResourceAsColor")
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    Log.d(TAG, "onTextChanged: ")
+            }
+
+            @SuppressLint("ResourceAsColor")
+            override fun afterTextChanged(s: Editable?) {
+                Log.d(TAG, "afterTextChanged: ${homeedit.text.toString()}")
+                if (homeedit.text.isNullOrEmpty()) {
+                    homeinfobtn.isEnabled = false
+                    homeinfobtn.setBackgroundResource(R.drawable.home_null)
+                    homeinfobtn.setTextColor(resources.getColor(R.color.Choosecommunity))
+                } else {
+                    homeinfobtn.isEnabled = true
+                    homeinfobtn.setBackgroundResource(R.drawable.home_check)
+                    homeinfobtn.setTextColor(resources.getColor(R.color.white))
+                }
+            }
+        })
+
+    }
+
+    fun navigation(view: View){
+        setContentView(R.layout.activity_main)
 
         supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment).commit()
         navigation.selectedItemId = R.id.navigation_home
@@ -75,5 +109,21 @@ class MainActivity : AppCompatActivity() {
             }
             return@setOnNavigationItemSelectedListener true
         }
+
+    }
+    //點擊空白處關閉鍵盤
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            if (this.currentFocus != null) {
+                if (this.currentFocus!!.windowToken != null) {
+                    imm.hideSoftInputFromWindow(
+                        this.currentFocus!!.windowToken,
+                        InputMethodManager.HIDE_NOT_ALWAYS
+                    )
+                }
+            }
+        }
+        return super.onTouchEvent(event)
     }
 }

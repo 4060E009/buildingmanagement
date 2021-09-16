@@ -5,62 +5,52 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <View
-        android:id="@+id/mask"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/white"
-        android:elevation="3dp"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:elevation="55dp"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <ImageButton
-        android:id="@+id/closeBtn"
-        android:layout_width="27dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="15dp"
-        android:background="@null"
-        android:scaleType="fitCenter"
-        android:src="@drawable/icon_android_cms_app_bar_close"
-        android:translationZ="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        app:layout_constraintStart_toStartOf="@+id/toolbar"
-        app:layout_constraintTop_toTopOf="@+id/toolbar" />
-
-    <TextView
-        android:id="@+id/titleText6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@null"
-        android:text="@string/homeinfo"
-        android:textColor="@color/forgotresidentcode"
-        android:textColorHighlight="@color/white"
-        android:textColorHint="@color/white"
-        android:textColorLink="@color/white"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:translationZ="14dp"
-        android:layout_marginLeft="60dp"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        app:layout_constraintStart_toStartOf="@id/closeBtn"
-        app:layout_constraintTop_toTopOf="parent"/>
-
     <RelativeLayout
+        android:id="@+id/top_relayout"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content" >
+
+        <ImageButton
+            android:id="@+id/closeBtn"
+            android:layout_width="27dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:background="@null"
+            android:onClick="navigation"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_android_cms_app_bar_close"
+            android:translationZ="14dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/titleText6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="@string/homeinfo"
+            android:textColor="@color/forgotresidentcode"
+            android:textColorHighlight="@color/white"
+            android:textColorHint="@color/white"
+            android:textColorLink="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:translationZ="14dp"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="38dp"
+            app:layout_constraintStart_toStartOf="@id/closeBtn"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    </RelativeLayout>
+
+
+    <ScrollView
+        app:layout_constraintBottom_toTopOf="@id/bottom_relayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/second_scoll">
 
         <ImageView
             android:id="@+id/forgot"
@@ -68,29 +58,29 @@
             android:layout_height="200dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="150dp"
-            android:src="@drawable/icon_android_cms_thumbnail_account_info"
-            />
+            android:src="@drawable/icon_android_cms_thumbnail_account_info" />
 
 
         <EditText
             android:id="@+id/homeedit"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:hint="@string/homeedit"
-            android:textColor="@color/Choosecommunity"
-            android:textSize="20dp"
-            android:layout_marginTop="20dp"
-            android:stateListAnimator="@null"
-            android:background="@drawable/shape"
-            android:backgroundTint="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             android:layout_below="@id/forgot"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape"
+            android:backgroundTint="@color/white"
             android:gravity="left|center_vertical"
-            android:paddingLeft="16dp"/>
+            android:hint="@string/homeedit"
+            android:paddingLeft="16dp"
+            android:textCursorDrawable="@drawable/textcursor"
+            android:stateListAnimator="@null"
+            android:textColor="@color/Choosecommunity"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/textview7"
@@ -104,35 +94,43 @@
             android:layout_marginTop="20dp"
             android:layout_below="@id/homeedit"/>
 
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/bottom_relayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/second_scoll"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <Button
             android:id="@+id/homeinfobtn"
             android:layout_width="100dp"
             android:layout_height="45dp"
+            android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"
+            android:layout_marginLeft="280dp"
             android:background="@drawable/homeinfo"
             android:backgroundTint="@color/buttonbackground"
+            android:onClick="navigation"
             android:stateListAnimator="@null"
             android:text="@string/homeinfobtn"
             android:textColor="@color/Choosecommunity"
-            android:textSize="14dp"
-            android:layout_marginLeft="280dp"
-            android:layout_alignParentBottom="true"/>
-
+            android:textSize="14dp" />
 
         <Button
             android:id="@+id/homeinfobtn1"
             android:layout_width="100dp"
             android:layout_height="45dp"
+            android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"
+            android:layout_marginLeft="170dp"
             android:background="@drawable/homeinfo"
+            android:onClick="navigation"
             android:stateListAnimator="@null"
             android:text="@string/homeinfobtn1"
             android:textColor="@color/loading"
-            android:textSize="14dp"
-            android:layout_marginLeft="170dp"
-            android:layout_alignParentBottom="true"/>
-
+            android:textSize="14dp" />
 
     </RelativeLayout>
 
