@@ -31,6 +31,9 @@ import kotlinx.android.synthetic.main.login_landing.*
 import kotlinx.android.synthetic.main.privacypolicy1.*
 import org.json.JSONArray
 import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 import kotlin.concurrent.thread
 
 
@@ -95,6 +98,7 @@ class loginActivity : AppCompatActivity() {
         val handler = Handler()
         handler.postDelayed({
             if (hasLoginToken()){
+                loginsave()
                 intent = Intent(this@loginActivity,MainActivity::class.java).apply {
                     putExtra(AlarmClock.EXTRA_MESSAGE,intent)
                     startActivity(intent)
@@ -529,6 +533,22 @@ class loginActivity : AppCompatActivity() {
 
     fun hasLoginToken(): Boolean{
         return File(filesDir.absolutePath, "loginToken.txt").exists()
+    }
+
+    private fun loginsave() {
+        val data = "Hello"
+        try {
+            val outStream: FileOutputStream = this.openFileOutput("loginTokenloginToken.txt", Context.MODE_PRIVATE)
+            outStream.write(data.toByteArray())
+            outStream.close()
+            Log.d(TAG, "save_name: save success")
+        } catch (e: FileNotFoundException) {
+            Log.d(TAG, "save_name error: file not found")
+            return
+        } catch (e: IOException) {
+            Log.d(TAG, "save_name: IO error")
+            return
+        }
     }
 }
 
