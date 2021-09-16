@@ -6,17 +6,11 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.provider.AlarmClock
+import android.provider.SyncStateContract
 import android.text.Editable
-import android.text.SpannableString
-import android.text.Spanned
 import android.text.TextWatcher
-import android.text.style.ForegroundColorSpan
-import android.text.style.StyleSpan
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
@@ -25,9 +19,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
-import com.example.buildingmanagement.HttpApi.BindUserData
 import com.example.buildingmanagement.HttpApi.HttpApi
+import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.forgotresidentcode.*
@@ -37,6 +30,7 @@ import kotlinx.android.synthetic.main.listview_item.*
 import kotlinx.android.synthetic.main.login_landing.*
 import kotlinx.android.synthetic.main.privacypolicy1.*
 import org.json.JSONArray
+import kotlin.concurrent.thread
 
 
 val displayMetrics = DisplayMetrics()
@@ -65,6 +59,9 @@ class loginActivity : AppCompatActivity() {
 //        "社區11", "社區12", "社區13", "社區14", "社區15" )
 
     var array: ArrayList<String> = arrayListOf()
+
+//    private lateinit var handler: Handler
+//    private lateinit var myThread: Thread
 
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -308,14 +305,14 @@ class loginActivity : AppCompatActivity() {
                 val msgWidth: Int = (widthPixels*0.778).toInt()
                 messageDialog.setView(messageDialogView)
                 var title = messageDialogView.findViewById<TextView>(R.id.title)
-                title.setText(myTitle)
+                title.text = myTitle
                 title.setTextColor(resources.getColor(R.color.forgotresidentcode))
                 title.textSize = 16f
                 title.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
                 title.setPadding((msgWidth*0.067).toInt(), (msgHeight*0.038).toInt(), (msgWidth*0.067).toInt(), (msgHeight*0.016).toInt())
 
                 var msg = messageDialogView.findViewById<TextView>(R.id.msg)
-                msg.setText(myMsg)
+                msg.text = myMsg
                 msg.setPadding((msgWidth*0.067).toInt(), 0, (msgWidth*0.067).toInt(), (msgHeight*0.038).toInt())
                 msg.textSize = 14f
                 msg.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Regular.otf")
@@ -360,6 +357,7 @@ class loginActivity : AppCompatActivity() {
         val button = findViewById<Button>(R.id.landingbutton)
         landingbutton3.typeface = Typeface.createFromAsset(assets,"NotoSansTC-Medium.otf")
         var enter_main: Boolean = false
+        val handler = Handler(Looper.getMainLooper())
 
         if (usercode.isNullOrEmpty() || selectname.isNullOrEmpty()) {
             landingedit.setBackgroundResource(R.drawable.error_border)
@@ -367,17 +365,24 @@ class loginActivity : AppCompatActivity() {
 //            userCodeUsing()
         } else {
             Log.d(TAG, "selectname : ${selectname}")
-            httpApi.BindUserData(selectname, "2222", "123456789") {
+            Log.d(TAG, "usercode : ${usercode}")
+            httpApi.BindUserData(selectname, usercode, "123456789") {
                 onSuccess {
                     if (it.equals("error")) {
                         userCodeUsing()
                     } else if (it.equals("null")) {
                         userCodeErrorDialog()
                     } else {
-                        setContentView(R.layout.homeinfo)
+//                              setContentView(R.layout.homeinfo)
+                                intent = Intent(this@loginActivity,MainActivity::class.java).apply {
+                                    putExtra(AlarmClock.EXTRA_MESSAGE,intent)
+                                    startActivity(intent)
+                       }
                     }
                 }
+
             }
+
 //            if (enter_main) {
 //                val intent = Intent(this, MainActivity::class.java).apply {
 //                    putExtra(AlarmClock.EXTRA_MESSAGE, intent)
@@ -390,7 +395,6 @@ class loginActivity : AppCompatActivity() {
 //                }
 //            }
         }
-
     }
 
     // get device width and height

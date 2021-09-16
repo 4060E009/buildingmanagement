@@ -2,6 +2,7 @@ package com.example.buildingmanagement.HttpApi
 
 import android.os.Looper
 import android.util.Log
+import com.example.buildingmanagement.loginActivity
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -98,7 +99,10 @@ class HttpApi {
                         sipPassword = itemList.getString("sipPassword")
                     )
                     // TODO("response to json object")
-                    mlistener._onSuccess?.invoke(itemList)
+//                    (mlistener as loginActivity).runOnUiThread {
+                        mlistener._onSuccess?.invoke(itemList)
+//                    }
+
                     Log.d(TAG, "" + itemList)
                 }
             }
