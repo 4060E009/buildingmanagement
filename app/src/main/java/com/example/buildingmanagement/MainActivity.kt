@@ -13,7 +13,11 @@ import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.homeinfo.*
@@ -29,16 +33,22 @@ class MainActivity : AppCompatActivity() {
         val settingFragment = settingFragment()
     }
 
+    var heightPixels = 0
+    var widthPixels = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.supportActionBar?.hide() //隱藏title
+        setContentView(R.layout.homeinfo)
+        homeEdit()
 
-        if (isSave()){
-            setContentView(R.layout.activity_main)
-        }else{
-            setContentView(R.layout.homeinfo)
-            homeEdit()
-        }
+
+//        if (isSave()){
+//            setContentView(R.layout.activity_main)
+//        }else{
+//            setContentView(R.layout.homeinfo)
+//            homeEdit()
+//        }
 
         val androidBug5497Workaround = AndroidBug5497Workaround()
         androidBug5497Workaround.assistActivity(this)
@@ -62,9 +72,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         // if file exist, read file data
-//        if (isSave()) {
-//            homeedit.setText(getName())
-//        }
+        if (isSave()) {
+            homeedit.setText(getName())
+        }
     }
 
     fun homeEdit(){
@@ -177,10 +187,10 @@ class MainActivity : AppCompatActivity() {
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         if (event.action == MotionEvent.ACTION_DOWN) {
-            if (this.currentFocus != null) {
-                if (this.currentFocus!!.windowToken != null) {
+            if (this@MainActivity.currentFocus != null) {
+                if (this@MainActivity.currentFocus!!.windowToken != null) {
                     imm.hideSoftInputFromWindow(
-                        this.currentFocus!!.windowToken,
+                        this@MainActivity.currentFocus!!.windowToken,
                         InputMethodManager.HIDE_NOT_ALWAYS
                     )
                 }

@@ -5,30 +5,36 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
-        android:id="@+id/top_relayout"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+    <View
+        android:id="@+id/mask"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:elevation="3dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/closeBtn"
             android:layout_width="27dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
+            android:layout_marginTop="16dp"
             android:background="@null"
             android:onClick="navigation"
             android:scaleType="fitCenter"
             android:src="@drawable/icon_android_cms_app_bar_close"
             android:translationZ="14dp"
-            android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/titleText6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="38dp"
             android:background="@null"
             android:text="@string/homeinfo"
             android:textColor="@color/forgotresidentcode"
@@ -38,24 +44,17 @@
             android:textSize="20dp"
             android:textStyle="bold"
             android:translationZ="14dp"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="38dp"
             app:layout_constraintStart_toStartOf="@id/closeBtn"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </RelativeLayout>
-
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:layout_constraintTop_toTopOf="parent">
 
 
     <RelativeLayout
-        app:layout_constraintBottom_toTopOf="@id/bottom_relayout"
+        android:id="@+id/second_relayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/second_relayout">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/forgot"
@@ -72,18 +71,18 @@
             android:layout_height="60dp"
             android:layout_below="@id/forgot"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:layout_marginTop="20dp"
+            android:layout_marginRight="15dp"
             android:background="@drawable/shape"
             android:backgroundTint="@color/white"
             android:gravity="left|center_vertical"
             android:hint="@string/homeedit"
-            android:singleLine="true"
             android:paddingLeft="16dp"
-            android:textCursorDrawable="@drawable/textcursor"
+            android:singleLine="true"
             android:stateListAnimator="@null"
             android:textColor="@color/forgotresidentcode"
             android:textColorHint="@color/Choosecommunity"
+            android:textCursorDrawable="@drawable/textcursor"
             android:textSize="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -93,24 +92,14 @@
             android:id="@+id/textview7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/hometext"
-            android:textSize="14dp"
+            android:layout_below="@id/homeedit"
+            android:layout_marginTop="20dp"
             android:paddingLeft="16dp"
+            android:text="@string/hometext"
             android:textAlignment="textStart"
             android:textColor="@color/Choosecommunity"
-            android:layout_marginTop="20dp"
-            android:layout_below="@id/homeedit"/>
+            android:textSize="14dp" />
 
-    </RelativeLayout>
-
-</ScrollView>
-
-    <RelativeLayout
-        android:id="@+id/bottom_relayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
 
         <Button
             android:id="@+id/homeinfobtn"
@@ -118,13 +107,13 @@
             android:layout_height="45dp"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="280dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="30dp"
             android:background="@drawable/home_null"
+            android:enabled="false"
             android:onClick="navigation"
             android:stateListAnimator="@null"
             android:text="@string/homeinfobtn"
             android:textColor="@color/homeinfobtn"
-            android:enabled="false"
             android:textSize="14dp" />
 
         <Button
@@ -133,7 +122,7 @@
             android:layout_height="45dp"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="170dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="30dp"
             android:background="@drawable/homeinfo"
             android:onClick="navigation"
             android:stateListAnimator="@null"

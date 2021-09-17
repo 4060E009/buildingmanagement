@@ -8,7 +8,6 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.os.*
 import android.provider.AlarmClock
-import android.provider.SyncStateContract
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.DisplayMetrics
@@ -34,7 +33,6 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
-import kotlin.concurrent.thread
 
 
 val displayMetrics = DisplayMetrics()
@@ -97,6 +95,8 @@ class loginActivity : AppCompatActivity() {
         }
         val handler = Handler()
         handler.postDelayed({
+//            initLandingPage()
+
             if (hasLoginToken()){
                 loginsave()
                 intent = Intent(this@loginActivity,MainActivity::class.java).apply {

@@ -27,7 +27,7 @@
         </activity>
         <activity android:name=".MainActivity"
                   android:theme="@style/Theme.NoActionBar"
-                  android:windowSoftInputMode="stateHidden|adjustPan"/>
+                  android:windowSoftInputMode="stateHidden|adjustResize"/>
     </application>
 
 </manifest>
