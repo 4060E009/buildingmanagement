@@ -39,16 +39,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         this.supportActionBar?.hide() //隱藏title
-        setContentView(R.layout.homeinfo)
-        homeEdit()
+//        setContentView(R.layout.homeinfo)
+//        homeEdit()
 
 
-//        if (isSave()){
-//            setContentView(R.layout.activity_main)
-//        }else{
-//            setContentView(R.layout.homeinfo)
-//            homeEdit()
-//        }
+        if (hasSaveName()){
+            setContentView(R.layout.activity_main)
+            navigation()
+        }else{
+            setContentView(R.layout.homeinfo)
+            homeEdit()
+        }
 
         val androidBug5497Workaround = AndroidBug5497Workaround()
         androidBug5497Workaround.assistActivity(this)
@@ -71,10 +72,6 @@ class MainActivity : AppCompatActivity() {
             window.statusBarColor = Color.TRANSPARENT
         }
 
-        // if file exist, read file data
-        if (isSave()) {
-            homeedit.setText(getName())
-        }
     }
 
     fun homeEdit(){
@@ -106,20 +103,27 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    fun navigation(view: View){
+    fun buttonPress(view: View) {
         when(view.id) {
             R.id.homeinfobtn -> {
                 saveName()
             }
             R.id.homeinfobtn1 -> {
                 saveName()
-            } else -> {
+            }
+            R.id.closeBtn -> {
+                saveName()
+            }
+            else -> {
                 Log.d(TAG, "navigation: else")
             }
         }
 
         setContentView(R.layout.activity_main)
+        navigation()
+    }
 
+    fun navigation(){
         supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment).commit()
         navigation.selectedItemId = R.id.navigation_home
         navigation.setOnNavigationItemSelectedListener{
@@ -144,9 +148,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun isSave(): Boolean{
-        Log.d(TAG, "isSave: ${File(filesDir.absolutePath, "test.txt").exists()}")
-        return File(filesDir.absolutePath, "test.txt").exists()
+    fun hasSaveName(): Boolean{
+        Log.d(TAG, "hasSaveName: ${File(filesDir, "test.txt").exists()}")
+        return File(filesDir, "test.txt").exists()
     }
 
     // get text file content

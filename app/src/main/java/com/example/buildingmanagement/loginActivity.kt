@@ -98,11 +98,13 @@ class loginActivity : AppCompatActivity() {
 //            initLandingPage()
 
             if (hasLoginToken()){
-                loginsave()
-                intent = Intent(this@loginActivity,MainActivity::class.java).apply {
-                    putExtra(AlarmClock.EXTRA_MESSAGE,intent)
-                    startActivity(intent)
+//                loginsave()
+                // 跳轉到 MainActivity
+                intent = Intent(this@loginActivity, MainActivity::class.java).apply {
+                    putExtra(AlarmClock.EXTRA_MESSAGE, intent)
                 }
+                startActivity(intent)
+                finish()
             }else{
                 initLandingPage()
 
@@ -386,14 +388,15 @@ class loginActivity : AppCompatActivity() {
                     } else if (it.equals("null")) {
                         userCodeErrorDialog()
                     } else {
-//                              setContentView(R.layout.homeinfo)
-                                intent = Intent(this@loginActivity,MainActivity::class.java).apply {
-                                    putExtra(AlarmClock.EXTRA_MESSAGE,intent)
-                                    startActivity(intent)
-                       }
+//                        setContentView(R.layout.homeinfo)
+                        loginsave()
+                        intent = Intent(this@loginActivity,MainActivity::class.java).apply {
+                            putExtra(AlarmClock.EXTRA_MESSAGE,intent)
+                        }
+                        startActivity(intent)
+                        finish()
                     }
                 }
-
             }
 
 //            if (enter_main) {
@@ -532,13 +535,15 @@ class loginActivity : AppCompatActivity() {
     }
 
     fun hasLoginToken(): Boolean{
+        Log.d(TAG, "hasLoginToken: ${File(filesDir, "loginToken.txt").exists()}")
+        Log.d(TAG, "hasLoginToken dir: ${filesDir}")
         return File(filesDir.absolutePath, "loginToken.txt").exists()
     }
 
     private fun loginsave() {
         val data = "Hello"
         try {
-            val outStream: FileOutputStream = this.openFileOutput("loginTokenloginToken.txt", Context.MODE_PRIVATE)
+            val outStream: FileOutputStream = this.openFileOutput("loginToken.txt", Context.MODE_PRIVATE)
             outStream.write(data.toByteArray())
             outStream.close()
             Log.d(TAG, "save_name: save success")
