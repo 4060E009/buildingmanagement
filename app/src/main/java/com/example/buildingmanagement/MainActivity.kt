@@ -1,40 +1,23 @@
 package com.example.buildingmanagement
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
-import android.content.res.Configuration
 import android.graphics.Color
-import android.graphics.Rect
-import android.icu.util.Measure
 import android.os.Build
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.AttributeSet
 import android.util.Log
+import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.homeinfo.*
 import java.io.*
-import android.util.DisplayMetrics
-import android.view.*
-import android.view.inputmethod.InputMethodManager.SHOW_FORCED
-import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
-import android.widget.Button
-import android.content.Intent
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-
-import android.view.ViewTreeObserver
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import java.security.InvalidKeyException
 
 
 class MainActivity : AppCompatActivity() {
@@ -86,8 +69,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
-
 
     fun homeEdit(){
         homeedit.addTextChangedListener(object : TextWatcher {
@@ -218,27 +199,9 @@ class MainActivity : AppCompatActivity() {
         return super.onTouchEvent(event)
     }
 
-//    // 可能用不到
-//    fun isKeyboardShown(rootView: View): Boolean {
-//        val softKeyboardHeight: Int = 100
-//        var r = Rect()
-//        rootView.getWindowVisibleDisplayFrame(r)
-//        var dm = rootView.resources.displayMetrics;
-//        var diffHeight = rootView.bottom - r.bottom
-//        return diffHeight > softKeyboardHeight * dm.density
-//    }
-
-//    /**
-//     * ======================================================================
-//     *  test code
-//     * ======================================================================
-//     */
-//
-//
-//
-//    private val keyboardLayoutListener = OnGlobalLayoutListener {
+//    private val keyboardLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
 //        val rootLayout = window.decorView.findViewById<View>(R.id.container)
-//        val heightDiff: Int = rootLayout.getRootView().getHeight() - rootLayout.getHeight()
+//        val heightDiff: Int = rootLayout.rootView.height - rootLayout.height
 //        val contentViewTop = window.findViewById<View>(Window.ID_ANDROID_CONTENT).top
 //        val broadcastManager = LocalBroadcastManager.getInstance(this)
 //        if (heightDiff <= contentViewTop) {
@@ -253,5 +216,6 @@ class MainActivity : AppCompatActivity() {
 //            Log.d(TAG, "intent show keyboard: ${intent}")
 //        }
 //    }
+
 }
 

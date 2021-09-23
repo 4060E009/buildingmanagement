@@ -3,9 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/testconstrain"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <ImageButton
+    <ImageButton
             android:id="@+id/closeBtn"
             android:layout_width="27dp"
             android:layout_height="wrap_content"
@@ -37,21 +38,18 @@
             app:layout_constraintStart_toStartOf="@id/closeBtn"
             app:layout_constraintTop_toTopOf="parent" />
 
-
     <RelativeLayout
         android:id="@+id/second_relayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="50dp"
-        app:layout_constraintBottom_toTopOf="@id/bottom_layout"
-    >
+        app:layout_constraintBottom_toTopOf="@id/bottom_layout">
+
         <ImageView
             android:id="@+id/forgot"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
             android:src="@drawable/icon_android_cms_thumbnail_account_info" />
 
 
@@ -63,12 +61,12 @@
             android:layout_marginLeft="15dp"
             android:layout_marginTop="20dp"
             android:layout_marginRight="15dp"
+            android:background="@drawable/edit_border"
             android:gravity="left|center_vertical"
             android:hint="@string/homeedit"
             android:paddingLeft="16dp"
             android:singleLine="true"
             android:stateListAnimator="@null"
-            android:background="@drawable/edit_border"
             android:textColor="@color/forgotresidentcode"
             android:textColorHint="@color/Choosecommunity"
             android:textCursorDrawable="@drawable/textcursor"
@@ -85,6 +83,7 @@
             android:layout_marginTop="20dp"
             android:paddingLeft="16dp"
             android:text="@string/hometext"
+
             android:textAlignment="textStart"
             android:textColor="@color/Choosecommunity"
             android:textSize="14dp" />
@@ -96,7 +95,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:paddingBottom="30dp"
         android:layout_width="match_parent"
-        android:layout_height="150dp" >
+        android:layout_height="230dp">
 
         <Button
             android:id="@+id/homeinfobtn"
